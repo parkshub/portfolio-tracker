@@ -3,11 +3,35 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+
+const theme = createTheme();
+
+theme.typography.h1 = {
+  fontSize: "2rem",
+  "@media (max-width: 600px)": { // this is for when screen size is smaller than 600px
+    fontSize: "5rem"
+  }
+}
+
+theme.typography.myVariant = {
+  fontSize: "10rem"
+}
+
+theme.palette.primary = {
+  main: "green"
+}
+
+
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>
 );
 
