@@ -5,31 +5,35 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
+import { CssBaseline } from '@mui/material';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 
 const theme = createTheme();
 
-theme.typography.h1 = {
-  fontSize: "2rem",
-  "@media (max-width: 600px)": { // this is for when screen size is smaller than 600px
-    fontSize: "5rem"
-  }
-}
+// theme.typography.h1 = {
+//   fontSize: "2rem",
+//   "@media (max-width: 600px)": { // this is for when screen size is smaller than 600px
+//     fontSize: "5rem"
+//   }
+// }
 
-theme.typography.myVariant = {
-  fontSize: "10rem"
-}
+// theme.typography.myVariant = {
+//   fontSize: "10rem"
+// }
 
-theme.palette.primary = {
-  main: "green"
-}
+// theme.palette.primary = {
+//   main: "green"
+// }
+
+// theme.spacing(10)
 
 
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
+      <CssBaseline/>
       <App />
     </ThemeProvider>
   </React.StrictMode>

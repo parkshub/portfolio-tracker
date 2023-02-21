@@ -1,6 +1,7 @@
 import './App.css';
-import Test from '../src/pages/Test'
+import Navbar from './pages/Navbar'
 import Test2 from '../src/pages/Test2'
+import Main from './pages/Main';
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
 
 
@@ -8,9 +9,11 @@ function App() {
   return (
 
     <Router>
+      <Navbar/>
       <Routes>
-        <Route path='/test1' element={<Test/>}/>
-        <Route path='/test2' element={<Test2/>}/>
+        <Route path='/main' element={<Main/>}/> 
+        {/* <Route path='/test1' element={<Test/>}/> */}
+        <Route path='/' element={<Test2/>}/>
       </Routes>
     </Router>
     
