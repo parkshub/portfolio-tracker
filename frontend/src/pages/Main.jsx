@@ -4,19 +4,28 @@ import { useState } from 'react'
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
-import { Grid, Button, Typography, Box, Paper} from '@mui/material'
+import { Grid, Button, Typography, Box, Paper, Container} from '@mui/material'
 import ExmaplePie from '../components/ExamplePie'
 import ExampleLine from '../components/ExampleLine'
-// import data from '../utils/data'
-import { lineData } from '../utils/data'
-import { pieData } from '../utils/data'
-// "grid": {
-//     "line": {
-//         "stroke": "#1b1818",
-//         "strokeWidth": 1
-//     }
+
+import { lineData, pieData } from '../utils/data'
+
+import Carousel from 'react-material-ui-carousel'
+
+
 
 const Main = () => {
+
+    var items = [
+        {
+            name: "Random Name #1",
+            description: "Probably the most random thing you have ever seen!"
+        },
+        {
+            name: "Random Name #2",
+            description: "Hello World!"
+        }
+    ]
     const [value, setValue] = useState('daily');
 
     const handleChange = (event, newValue) => {
@@ -24,6 +33,7 @@ const Main = () => {
     };
   return (
     <>
+    <Container maxWidth="xl">
         <Grid container textAlign='center' sx={{width: "100%"}}>
             <Grid item xs={12}>
                 {/* <Typography variant='h1' sx={{ typography: { xs: "h3", md: "h1"}}}>   just know you can do this */}
@@ -76,6 +86,13 @@ const Main = () => {
                 </Grid>
             </Grid>
         </Grid>
+
+        <Carousel>
+            {
+                items.map( (item, i) => <div key={i}>{JSON.stringify(item)}</div> )
+            }
+        </Carousel>
+    </Container>
     </>
   )
 }

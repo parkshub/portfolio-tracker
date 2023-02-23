@@ -25,7 +25,7 @@ const MyResponsiveLine = ({data}) => (
             // legendOffset: 50,
             // legendPosition: 'middle'
         }}
-        colors="DarkBlue"
+        colors="#2196f3"
         axisLeft={{
             orient: 'left',
             tickSize: 0,
