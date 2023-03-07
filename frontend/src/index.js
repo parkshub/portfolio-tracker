@@ -5,6 +5,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 
+import { Provider } from 'react-redux';
+import { store } from './app/store';
+
+
 import { CssBaseline } from '@mui/material';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -32,10 +36,12 @@ const theme = createTheme();
 
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline/>
-      <App />
-    </ThemeProvider>
+    <Provider store={ store }>
+      <ThemeProvider theme={theme}>
+        <CssBaseline/>
+        <App />
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>
 );
 

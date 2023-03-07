@@ -12,6 +12,9 @@ import { lineData, pieData } from '../utils/data'
 
 import Carousel from 'react-material-ui-carousel'
 
+import { useSelector, useDispatch } from "react-redux"
+
+
 
 
 const Main = () => {
@@ -92,6 +95,7 @@ const Main = () => {
                 items.map( (item, i) => <div key={i}>{JSON.stringify(item)}</div> )
             }
         </Carousel>
+        {/* https://github.com/Learus/react-material-ui-carousel/blob/master/README.md */}
     </Container>
     </>
   )
