@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 
+import coinService from "./coinService"
+
 
 const initialState = {
     coins: [],
@@ -26,18 +28,30 @@ export const coinSlice = createSlice({
     initialState,
     reducers: {
         reset: (state) => {
-            state.isRejected = false,
-            state.isPending = false,
-            state.isFulfilled = false,
+            state.coins = []
+            state.isRejected = false
+            state.isPending = false
+            state.isFulfilled = false
             state.message = ''
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(getTopCoins.rejected, (state, action) => {
-                state.isRejected = true,
-                state.isPending = false,
+                state.isRejected = true
+                state.isPending = false
                 state.message = action.payload
+            })
+            .addCase(getTopCoins.pending, (state) => {
+                state.isRejected = false
+                state.isPending = true
+                state.isFulfilled = true
+            })
+            .addCase(getTopCoins.fulfilled, (state, action) => {
+                state.isRejected = false
+                state.isPending = false
+                state.isFulfilled = true
+                state.coins = action.payload
             })
     }
 })
