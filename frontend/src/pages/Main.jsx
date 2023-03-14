@@ -4,15 +4,14 @@ import { lineData, pieData } from '../utils/data'
 import { useEffect, useState } from 'react';
 import { getTopCoins, reset } from '../features/coins/coinSlice';
 
-
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import ExmaplePie from '../components/ExamplePie'
 import ExampleLine from '../components/ExampleLine'
+import Divider from '@mui/material/Divider';
 import { Grid, Button, Typography, Box, Paper, Container} from '@mui/material'
 
-import Carousel from 'react-material-ui-carousel'
-import CarouselItem from '../components/CarouselItem';
+import Carousel from '../components/Carousel';
 
 const Main = () => {
     const dispatch = useDispatch()
@@ -98,15 +97,9 @@ const Main = () => {
                 
             </Grid>
             <Grid item xs={12}>
+                <Divider sx={{m: 5}} variant="middle">Top 10 Coins by Market Capital</Divider>
                 <Box display="flex" justifyContent="center">
-                    <Carousel autoPlay={false} sx={{width: 300}}>
-                        {
-                            coins.length > 0 &&
-                                coins.map((item, i) => (
-                                    <CarouselItem coin={item}/>
-                                ))
-                        }
-                    </Carousel>
+                    <Carousel coins={coins}/>
                 </Box>
             </Grid>
         </Grid>
