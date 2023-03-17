@@ -1,3 +1,5 @@
-let a = [1,2,3,4,5]
+// id and symbol
+let test = 'bitcoin'
+let coinsState = [{id: "bitcoin", symbol: "btc"}, {id: "ethereum", symbol:"eth"}, {id: "binancecoin", symbol: "bnb"}]
 
-console.log(a.slice(0,3))
+console.log(coinsState.filter(x => x.id.includes('bit') || x.symbol.includes('bit')))
