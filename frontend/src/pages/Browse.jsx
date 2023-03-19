@@ -24,21 +24,34 @@ import TableRow from '@mui/material/TableRow';
 import BrowseCoinCell from '../components/BrowseCoinCell';
 import { TextField } from '@mui/material';
 
+// main issues
+// state not showing on table
+// state being one step behind
+
 
 export default function Browse() {
 
     const dispatch = useDispatch()
 
-    // const { coins, isPending } = useSelector((state) => state.coin)
+    const { coins, isPending } = useSelector((state) => state.coin)
 
     const [coinsState, setCoinsState] = useState("")
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
 
-    const getAllCoins = async function() {
-        const res = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false')
-        setCoinsState(res.data)
-    } // make sure to do all requests and stuff in the backend using cors
+    const [testValue, setTestValue] = useState("")
+
+    // const getAllCoins = async function() {
+    //     const res = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false')
+    //     setCoinsState(res.data)
+    // } // make sure to do all requests and stuff in the backend using cors
+
+
+    const handleChangetest = (event) => {
+        // console.log(event.target.value)
+        setTestValue(event.target.value)
+        console.log(testValue)
+    }
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -50,18 +63,18 @@ export default function Browse() {
     }
 
     useEffect(() => {
-        // dispatch(getAllCoins())
-        // setCoinsState(coins)
-        getAllCoins()
+        dispatch(getAllCoins())
+        setCoinsState(coins)
+        // getAllCoins()
 
         return () => {
-            // dispatch(reset())
+            dispatch(reset())
         }
-    }, [])
+    }, [dispatch])
 
     return (
         <Box>
-        <TextField></TextField>
+        <TextField onChange={handleChangetest}></TextField>
             <TableContainer sx={{ minWidth: 850 }}>
                 <Table>
                 <TableHead>
