@@ -45,4 +45,4 @@ const items = coins.map((coin) => {
   )
 }
 
-export default Carousel
+export default React.memo(Carousel)

@@ -3,12 +3,12 @@ import { ResponsiveLine } from '@nivo/line'
 const MyResponsiveLine = ({data}) => (
     <ResponsiveLine
         data={data}
-        margin={{ top: 30, right: 30, bottom: 50, left: 30 }}
+        margin={{ top: 30, right: 30, bottom: 70, left: 80 }}
         xScale={{ type: 'point' }}
         yScale={{
             type: 'linear',
-            min: '0',
-            max: '300', // create a variable to max and make that the max instead of auto
+            min: 'auto',
+            max: 'auto', // create a variable to max and make that the max instead of auto
             stacked: true,
             reverse: false
         }}
@@ -32,8 +32,8 @@ const MyResponsiveLine = ({data}) => (
             tickPadding: 5,
             tickRotation: 0,
             tickValues: 5,
-            legend: 'price($)',
-            legendOffset: -40,
+            legend: '$ price',
+            legendOffset: -60,
             legendPosition: 'middle'
         }}
         enableGridX={false}

@@ -78,17 +78,17 @@ const Main = () => {
 
                     <Grid item xs={12}>
                         <Box sx={{ width: '100%' }} display="flex" justifyContent="center">
-                                <Tabs
-                                    value={value}
-                                    onChange={ handleChange }
-                                    textColor="primary"
-                                    indicatorColor="primary"
-                                    aria-label="secondary tabs example"
-                                >
-                                    <Tab value="daily" label="daily" sx={{ fontSize: 10 }}/>
-                                    <Tab value="monthly" label="monthly" sx={{ fontSize: 10 }}/>
-                                    <Tab value="yearly" label="yearly" sx={{ fontSize: 10 }}/>
-                                </Tabs>
+                            <Tabs
+                                value={value}
+                                onChange={ handleChange }
+                                textColor="primary"
+                                indicatorColor="primary"
+                                aria-label="secondary tabs example"
+                            >
+                                <Tab value="daily" label="daily" sx={{ fontSize: 10 }}/>
+                                <Tab value="monthly" label="monthly" sx={{ fontSize: 10 }}/>
+                                <Tab value="yearly" label="yearly" sx={{ fontSize: 10 }}/>
+                            </Tabs>
                         </Box>                    
                     </Grid>
                 </Grid>
@@ -103,7 +103,6 @@ const Main = () => {
                 </Box>
             </Grid>
         </Grid>
-
 
         {/* https://github.com/Learus/react-material-ui-carousel/blob/master/README.md */}
     </Container>

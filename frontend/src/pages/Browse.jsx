@@ -33,13 +33,18 @@ export default function Browse() {
 
     const dispatch = useDispatch()
 
-    const { coins, isPending } = useSelector((state) => state.coin)
+    const { coins, isPending } = useSelector((state) => state.coin) // store value
 
-    const [coinsState, setCoinsState] = useState("")
+    // const [coinsState, setCoinsState] = useState(coins) // this does not get called on second render
+    const [filteredCoinState, setFilteredCoinState] = useState(coins) // this does not get called on second render
+    // console.log(coins, coinsState)
+
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
 
     const [testValue, setTestValue] = useState("")
+
+    // const filteredCoins = coinsState.filter(x => x.id.includes(testValue) || x.symbol.includes(testValue))
 
     // const getAllCoins = async function() {
     //     const res = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false')
@@ -50,7 +55,12 @@ export default function Browse() {
     const handleChangetest = (event) => {
         // console.log(event.target.value)
         setTestValue(event.target.value)
-        console.log(testValue)
+        console.log('event.target.value', event.target.value)
+        console.log('testValue', testValue)
+
+        const filteredCoins = coins.filter(x => x.id.includes(event.target.value) || x.symbol.includes(event.target.value))
+        setFilteredCoinState(filteredCoins)
+        // setCoinsState(coinsState.filter(x => x.id.includes(testValue)))
     }
 
     const handleChangePage = (event, newPage) => {
@@ -64,13 +74,16 @@ export default function Browse() {
 
     useEffect(() => {
         dispatch(getAllCoins())
-        setCoinsState(coins)
+        // setCoinsState(coins)
         // getAllCoins()
-
         return () => {
             dispatch(reset())
         }
-    }, [dispatch])
+    }, [dispatch]) // doing setCoins and dispatch seems like bad practice here cuz dispatch calling also when coins changes when you dont need to
+
+    useEffect(() => {
+        setFilteredCoinState(coins)
+    }, [coins]) // by doing this you are saying when coins changes, call this
 
     return (
         <Box>
@@ -97,8 +110,8 @@ export default function Browse() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    { coinsState.length > 0 &&
-                        coinsState.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(coin => {
+                    { filteredCoinState.length > 0 &&
+                        filteredCoinState.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(coin => {
                             return(
                                 <BrowseCoinCell coin={coin} key={coin.id}/>
                             )
@@ -109,7 +122,8 @@ export default function Browse() {
                         showLastButton={true}
                         rowsPerPageOptions={[5, 10, 25]}
                         component="div"
-                        count={coinsState.length}
+                        // count={coinsState.length}
+                        count={filteredCoinState.length}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         onPageChange={handleChangePage}
