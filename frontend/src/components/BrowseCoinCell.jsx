@@ -7,9 +7,11 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
+import { Link } from 'react-router-dom';
+
 const BrowseCoinCell = ({coin}) => {
     return (
-        <TableRow>
+        <TableRow component={Link} to={`/coins/${coin.id}`}>
             <TableCell>
                 <img src={coin.image} alt="" width="50px"/>
             </TableCell>
@@ -34,6 +36,7 @@ const BrowseCoinCell = ({coin}) => {
                 { coin.price_change_percentage_24h.toFixed(2) }%
             </TableCell>
         </TableRow>
+        // </Link>
     )
 }
 

@@ -3,7 +3,7 @@ import { ResponsiveLine } from '@nivo/line'
 const MyResponsiveLine = ({data}) => (
     <ResponsiveLine
         data={data}
-        margin={{ top: 30, right: 30, bottom: 70, left: 80 }}
+        margin={{ top: 30, right: 60, bottom: 70, left: 80 }}
         xScale={{ type: 'point' }}
         yScale={{
             type: 'linear',
@@ -13,7 +13,7 @@ const MyResponsiveLine = ({data}) => (
             reverse: false
         }}
         yFormat=" >-$.2f"
-        curve="linear"
+        curve="natural"
         axisTop={null}
         axisRight={null}
         axisBottom={{
@@ -36,6 +36,8 @@ const MyResponsiveLine = ({data}) => (
             legendOffset: -60,
             legendPosition: 'middle'
         }}
+        // enableArea={true}
+        enableGridY={false}
         enableGridX={false}
         enablePoints={false}
         useMesh={true}

@@ -64,7 +64,7 @@ const getCoin = async(id) => {
 
     const info = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`)).data
 
-    let daily = (await axios.get("https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=1")).data.prices
+    let daily = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`)).data.prices
     daily = daily.reverse().filter((x, i) => i % 12 === 0).reverse()
     const dailyChart = 
     [{
@@ -72,10 +72,10 @@ const getCoin = async(id) => {
         "color": "hsl(155, 70%, 50%)",
         "data": []
     }]
-    daily.forEach(x => dailyChart[0].data.push({"x": new Date(x[0]).toUTCString(), "y": Number(x[1].toFixed(2))}))    
+    daily.forEach(x => dailyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(4,6).join(' '), "y": Number(x[1].toFixed(2))}))    
 
     
-    let monthly = (await axios.get("https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=91")).data.prices
+    let monthly = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=91`)).data.prices
     monthly = monthly.reverse().filter((x, i) => i % 4 === 0).reverse()
     const monthlyChart = 
     [{
@@ -83,10 +83,10 @@ const getCoin = async(id) => {
         "color": "hsl(155, 70%, 50%)",
         "data": []
     }]
-    monthly.forEach(x => monthlyChart[0].data.push({"x": new Date(x[0]).toUTCString(), "y": Number(x[1].toFixed(2))}))    
+    monthly.forEach(x => monthlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))    
 
 
-    let yearly = (await axios.get("https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=365")).data.prices
+    let yearly = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=365`)).data.prices
     yearly = yearly.reverse().filter((x, i) => i % 16 === 0).reverse()
     const yearlyChart = 
     [{
@@ -94,7 +94,7 @@ const getCoin = async(id) => {
         "color": "hsl(155, 70%, 50%)",
         "data": []
     }]
-    yearly.forEach(x => yearlyChart[0].data.push({"x": new Date(x[0]).toUTCString(), "y": Number(x[1].toFixed(2))}))  
+    yearly.forEach(x => yearlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))  
 
     const res = {info, dailyChart, monthlyChart, yearlyChart}
     console.log(res)

@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from "react-redux"
 import { lineData, pieData } from '../utils/data'
 import { useEffect, useState } from 'react';
-import { getTopCoins, reset } from '../features/coins/coinSlice';
+import { getTopCoins, reset } from '../features/coin/coinSlice';
 
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';

@@ -1,31 +1,31 @@
 export const pieData = [
     {
-      "id": "haskell",
-      "label": "haskell",
+      "id": "USDT",
+      "label": "Tether",
       "value": 10, // later i would need a function to do convert it to a percentage
       "color": "hsl(56, 70%, 50%)"
     },
     {
-      "id": "lisp",
-      "label": "lisp",
+      "id": "USDC",
+      "label": "USD Coin",
       "value": 10,
       "color": "hsl(8, 70%, 50%)"
     },
     {
-      "id": "python",
-      "label": "python",
+      "id": "BTC",
+      "label": "Bitcoin",
       "value": 30,
       "color": "hsl(227, 70%, 50%)"
     },
     {
-      "id": "javascript",
-      "label": "javascript",
+      "id": "ETH",
+      "label": "Ethereum",
       "value": 30,
       "color": "hsl(130, 70%, 50%)"
     },
     {
-      "id": "php",
-      "label": "php",
+      "id": "BNB",
+      "label": "BNB",
       "value": 20,
       "color": "hsl(308, 70%, 50%)"
     }
@@ -37,51 +37,51 @@ export const lineData =
       "color": "hsl(352, 70%, 50%)",
       "data": [
         {
-          "x": "plane",
+          "x": "May 1, 2023",
           "y": 205
         },
         {
-          "x": "helicopter",
+          "x": "May 2, 2023",
           "y": 55
         },
         {
-          "x": "boat",
+          "x": "May 3, 2023",
           "y": 6
         },
         {
-          "x": "train",
+          "x": "May 4, 2023",
           "y": 234
         },
         {
-          "x": "subway",
+          "x": "May 5, 2023",
           "y": 47
         },
         {
-          "x": "bus",
+          "x": "May 6, 2023",
           "y": 169
         },
         {
-          "x": "car",
+          "x": "May 7, 2023",
           "y": 105
         },
         {
-          "x": "moto",
+          "x": "May 8, 2023",
           "y": 171
         },
         {
-          "x": "bicycle",
+          "x": "May 9, 2023",
           "y": 278
         },
         {
-          "x": "horse",
+          "x": "May 10, 2023",
           "y": 213
         },
         {
-          "x": "skateboard",
+          "x": "May 11, 2023",
           "y": 59
         },
         {
-          "x": "others",
+          "x": "May 12, 2023",
           "y": 245
         }
       ]

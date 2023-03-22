@@ -7,8 +7,8 @@ import { useEffect } from 'react';
 
 import { useDispatch } from 'react-redux';
 
-import { getAllCoins } from '../features/coins/coinSlice';
-import { reset } from '../features/coins/coinSlice';
+import { getAllCoins } from '../features/coin/coinSlice';
+import { reset } from '../features/coin/coinSlice';
 
 import { useSelector } from 'react-redux';
 
@@ -24,10 +24,6 @@ import TableRow from '@mui/material/TableRow';
 import BrowseCoinCell from '../components/BrowseCoinCell';
 import { TextField } from '@mui/material';
 
-// main issues
-// state not showing on table
-// state being one step behind
-
 
 export default function Browse() {
 
@@ -35,29 +31,17 @@ export default function Browse() {
 
     const { coins, isPending } = useSelector((state) => state.coin) // store value
 
-    // const [coinsState, setCoinsState] = useState(coins) // this does not get called on second render
     const [filteredCoinState, setFilteredCoinState] = useState(coins) // this does not get called on second render
-    // console.log(coins, coinsState)
 
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
 
-    const [testValue, setTestValue] = useState("")
-
-    // const filteredCoins = coinsState.filter(x => x.id.includes(testValue) || x.symbol.includes(testValue))
-
-    // const getAllCoins = async function() {
-    //     const res = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false')
-    //     setCoinsState(res.data)
-    // } // make sure to do all requests and stuff in the backend using cors
+    // const [testValue, setTestValue] = useState("")
 
 
     const handleChangetest = (event) => {
         // console.log(event.target.value)
-        setTestValue(event.target.value)
-        console.log('event.target.value', event.target.value)
-        console.log('testValue', testValue)
-
+        // setTestValue(event.target.value)
         const filteredCoins = coins.filter(x => x.id.includes(event.target.value) || x.symbol.includes(event.target.value))
         setFilteredCoinState(filteredCoins)
         // setCoinsState(coinsState.filter(x => x.id.includes(testValue)))
@@ -74,8 +58,6 @@ export default function Browse() {
 
     useEffect(() => {
         dispatch(getAllCoins())
-        // setCoinsState(coins)
-        // getAllCoins()
         return () => {
             dispatch(reset())
         }
