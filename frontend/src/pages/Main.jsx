@@ -13,9 +13,13 @@ import { Grid, Button, Typography, Box, Paper, Container} from '@mui/material'
 
 import Carousel from '../components/Carousel';
 
+import Login from '../components/Login'
+import SignUp from '../components/SignUp'
+
 const Main = () => {
     const dispatch = useDispatch()
-    
+
+    const { user } = useSelector((state) => state.auth)
     const { coins, isPending } = useSelector((state) => state.coin)
     const [value, setValue] = useState('daily');
 
@@ -51,18 +55,21 @@ const Main = () => {
                 </Typography>
 
 
-                <Typography>
+                <Typography sx={{paddingRight: 20, paddingLeft:20}}>
                     Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatum rerum, officia expedita voluptate laboriosam nulla aliquam sunt. Nam quia eos reprehenderit itaque ab iure impedit quos vel nesciunt, officia commodi laudantium delectus? Deserunt sit voluptas, optio ipsum laboriosam odio placeat.
                 </Typography>
-                <Grid item>
-                    <Button variant='contained' sx={{m: 1, width: 100}}>
-                        Sign Up
-                    </Button>
-                    
-                    <Button variant='contained' sx={{m: 1, width: 100}}>
-                        Login
-                    </Button>
-                </Grid>
+
+                { !user &&
+                    <Grid item>
+                        <Button variant='contained' sx={{m: 1, width: 100}}>
+                            <SignUp></SignUp>
+                        </Button>
+                        
+                        <Button variant='contained' sx={{m: 1, width: 100}}>
+                            <Login></Login>
+                        </Button>
+                    </Grid>
+                }
             </Grid>
 
             {/* <Grid item container xs={12} sx={{border: 10, borderColor:"black"}}> */}

@@ -26,6 +26,28 @@ export const registerUser = createAsyncThunk(
     }
 )
 
+export const loginUser = createAsyncThunk(
+    'auth/login',
+    async (body, thunkAPI) => {
+        console.log("slice received==", body)
+        try {
+            return await userService.loginUser(body)
+        } catch (error) {
+            const message = error.response.data
+            console.log('this is converted message', message)
+            return thunkAPI.rejectWithValue(message)
+        }
+    }
+)
+
+export const logoutUser = createAsyncThunk(
+    'auth/logout',
+    async () => {
+        console.log("slice")
+        return await userService.logoutUser()
+    }
+)
+
 const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -53,8 +75,32 @@ const authSlice = createSlice({
             .addCase(registerUser.fulfilled, (state, action) => {
                 state.isRejected = false
                 state.isPending = false
-                state.isFulfilled = false
+                state.isFulfilled = true
                 state.user = action.payload
+            })
+
+
+            .addCase(loginUser.rejected, (state, action) => {
+                state.isRejected = true
+                state.isPending = false
+                state.isFulfilled = false
+                state.message = action.payload
+            })
+            .addCase(loginUser.pending, (state) => {
+                state.isRejected = false
+                state.isPending = true
+                state.isFulfilled = false
+            })
+            .addCase(loginUser.fulfilled, (state, action) => {
+                state.isRejected = false
+                state.isPending = false
+                state.isFulfilled = true
+                state.user = action.payload
+            })
+
+
+            .addCase(logoutUser.fulfilled, (state) => {
+                state.user = ""
             })
     }
 })

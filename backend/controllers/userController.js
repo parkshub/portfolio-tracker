@@ -18,28 +18,59 @@ exports.registerUser = asyncHandler(async(req, res) => {
         res.status(400).send("Please enter all fields")
     }
 
-    if (password !== password2) {
+    else if (password !== password2) {
         res.status(400).send("Passwords do not match")
     }
 
-    if (await UserModel.findOne({email: email}) !== null) {
+    else if (await UserModel.findOne({email: email}) !== null) {
         res.status(400).send("User already exists")
     }
 
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
+    else {
 
-    const user = await UserModel.create({
-        userName,
-        email,
-        password: hashedPassword
-    })
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, salt)
 
-    const token = await generateToken(user.id)
+        const user = await UserModel.create({
+            userName,
+            email,
+            password: hashedPassword
+        })
 
-    return res.json({
-        userName,
-        email,
-        token
-    })
+        const token = await generateToken(user.id)
+
+        return res.json({
+            userName,
+            // email,
+            token
+        })
+    }
 })
+
+exports.loginUser = async(req, res) => {
+
+    const { email, password } = req.body
+
+    const user = await UserModel.findOne({email: email})
+
+    if (!email || !password) {
+        res.status(400).send("Please enter all fields")
+    }
+
+    else if (user === null || !await bcrypt.compare(password, user.password)) {
+        res.status(400).send("Invalid credentials")
+    }
+
+    else {
+        res.status(201).json({
+            id: user.id,
+            userName: user.userName,
+            token: await generateToken(user.id)
+        })
+    }
+}
+
+exports.getUser = async(req, res) => {
+    const user = await UserModel.findById(req.user.id).select('-password -email')
+    res.json(user)
+}

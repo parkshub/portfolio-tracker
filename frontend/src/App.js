@@ -8,6 +8,8 @@ import Coins from './pages/Coins';
 
 import Test1 from './pages/ErrorHandlingExample';
 
+import LoginTestErase from './pages/LoginTestErase';
+
 import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css"
 
@@ -27,6 +29,7 @@ function App() {
           <Route path='/test1' element={<Test1/>}/>
           <Route path='/' element={<Test2/>}/>
           <Route path='/coins/:id' element={<Coins/>}/>
+          <Route path='/loginTest' element={<LoginTestErase/>}/>
         </Routes>
       </Router>
       <ToastContainer />

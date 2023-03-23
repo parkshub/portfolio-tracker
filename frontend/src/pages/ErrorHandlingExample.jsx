@@ -13,8 +13,8 @@ const Test1 = () => {
     const blah = {
         userName: "asdf",
         email: "a@a.com",
-        password: "asdf",
-        password2: "asdf"
+        password: "a",
+        password2: "a"
     }
 
     const onClick = () => {
