@@ -122,7 +122,6 @@ exports.getTx = async(req, res) => {
     // make sure to sort the tx by date
     
     const user = await UserModel.findById(userId).populate("transactions")
-    console.log("this was user.trans ", user.transactions)
     res.json(user.transactions)
 }
 
@@ -135,10 +134,13 @@ exports.deleteTx = async(req, res) => {
 
     // make sure to sort the tx by date
 
-    const coins = await CoinModel.findByIdAndDelete(id)
-    console.log(coins)
-    
-    // const user = await UserModel.findById(userId).populate("transactions")
-    // console.log("this was user.trans ", user.transactions)
-    res.json(coins)
+    await CoinModel.findByIdAndDelete(id)
+    await UserModel.updateOne(
+        {_id: userId},
+        { $pull: { transactions: id}}
+    )
+
+    const transactions = await UserModel.findById(userId).populate('transactions')
+
+    res.json(transactions)
 }
