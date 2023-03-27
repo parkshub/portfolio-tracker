@@ -12,9 +12,24 @@ const initialState = {
     message: ''
 }
 
+export const testCoin = createAsyncThunk(
+    'coin/testCoin',
+    async(data, thunkAPI) => {
+        // console.log('get coin slice received id ', id)
+        try {
+            return await coinService.testCoin(data)
+        } catch (error) {
+            const message = error.response.data
+            return thunkAPI.rejectWithValue(message)
+        }
+    }
+)
+
+
 export const getCoin = createAsyncThunk(
     'coin/getCoin',
     async(id, thunkAPI) => {
+        console.log('get coin slice received id ', id)
         try {
             return await coinService.getCoin(id)
         } catch (error) {
@@ -48,11 +63,51 @@ export const getAllCoins = createAsyncThunk(
     }
 )
 
+
+export const txCoin = createAsyncThunk(
+    'coin/txCoin',
+    async(data, thunkAPI) => {
+        console.log('tx slice received ', data)
+        try {
+            return await coinService.txCoin(data)
+        } catch (error) {
+            const message = error.response.data
+            return thunkAPI.rejectWithValue(message)
+        }
+    }
+)
+
+export const getTx = createAsyncThunk(
+    'coin/getTx',
+    async(_, thunkAPI) => {
+        try {
+            console.log("get tx slice ran")
+            return await coinService.getTx()
+        } catch (error) {
+            const message = error.response.data
+            return thunkAPI.rejectWithValue(message)
+        }
+    }
+)
+
+export const deleteTx = createAsyncThunk(
+    'coin/deleteTx',
+    async(id, thunkAPI) => {
+        try {
+            return await coinService.deleteTx(id)
+        } catch (error) {
+            const message = error.response.data
+            return thunkAPI.rejectWithValue(message)
+        }
+    }
+)
+
 export const coinSlice = createSlice({
     name: 'coin',
     initialState,
     reducers: {
         reset: (state) => {
+            state.coin = ''
             state.coins = []
             state.isRejected = false
             state.isPending = false
@@ -119,6 +174,76 @@ export const coinSlice = createSlice({
                 state.isFulfilled = true
                 state.coins = action.payload
             })
+
+            .addCase(txCoin.rejected, (state, action) => {
+                state.isRejected = true
+                state.isPending = false
+                state.message = action.payload
+            })
+            .addCase(txCoin.pending, (state) => {
+                state.isRejected = false
+                state.isPending = true
+                state.isFulfilled = false
+            })
+            .addCase(txCoin.fulfilled, (state) => {
+                state.isRejected = false
+                state.isPending = false
+                state.isFulfilled = true
+            })
+
+            .addCase(getTx.rejected, (state, action) => {
+                state.isRejected = true
+                state.isPending = false
+                state.message = action.payload
+            })
+            .addCase(getTx.pending, (state) => {
+                state.isRejected = false
+                state.isPending = true
+                state.isFulfilled = false
+            })
+            .addCase(getTx.fulfilled, (state, action) => {
+                state.isRejected = false
+                state.isPending = false
+                state.isFulfilled = true
+                state.coins = action.payload
+            })
+
+            .addCase(deleteTx.rejected, (state, action) => {
+                state.isRejected = true
+                state.isPending = false
+                state.message = action.payload
+            })
+            .addCase(deleteTx.pending, (state) => {
+                state.isRejected = false
+                state.isPending = true
+                state.isFulfilled = false
+            })
+            .addCase(deleteTx.fulfilled, (state, action) => {
+                state.isRejected = false
+                state.isPending = false
+                state.isFulfilled = true
+                state.coins = action.payload
+            })
+
+
+            
+            .addCase(testCoin.rejected, (state, action) => {
+                state.isRejected = true
+                state.isPending = false
+                state.message = action.payload
+            })
+            .addCase(testCoin.pending, (state) => {
+                state.isRejected = false
+                state.isPending = true
+                state.isFulfilled = false
+            })
+            .addCase(testCoin.fulfilled, (state, action) => {
+                state.isRejected = false
+                state.isPending = false
+                state.isFulfilled = true
+                state.coin = action.payload
+            })
+            
     }
 })
 

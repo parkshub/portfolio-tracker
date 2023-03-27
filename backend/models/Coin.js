@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const eventSchema = new mongoose.Schema({
-    userName: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
@@ -14,6 +14,10 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: [true, "Input coin symbol"]
     },
+    coinImage: {
+        type: String,
+        required: [true, "Input image"]
+    },
     price: {
         type: Number,
         required: [true, "Input price"]
@@ -22,10 +26,18 @@ const eventSchema = new mongoose.Schema({
         type: Number,
         required: [true, "Input amount"]
     },
+    total: {
+        type: Number,
+        required: [true, "Input total"]
+    },
     date: {
-        type: Date,
+        type: Number,
         require: [true, "Input date"]
-    } //https://mongoosejs.com/docs/tutorials/dates.html working with dates in mongoose
+    }, //https://mongoosejs.com/docs/tutorials/dates.html working with dates in mongoose
+    type: {
+        type: String,
+        required: [true, "Input tx type"]
+    }
 });
 
-module.exports = mongoose.model("Event", eventSchema)
+module.exports = mongoose.model("Transaction", eventSchema)

@@ -72,46 +72,46 @@ export default function Browse() {
         <TextField onChange={handleChangetest}></TextField>
             <TableContainer sx={{ minWidth: 850 }}>
                 <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>
-                            Logo
-                        </TableCell>
-                        <TableCell>
-                            Name: Ticker
-                        </TableCell>
-                        <TableCell>
-                            Market Cap
-                        </TableCell>
-                        <TableCell>
-                            Price
-                        </TableCell>
-                        <TableCell>
-                            Price Change 24 Hours
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    { filteredCoinState.length > 0 &&
-                        filteredCoinState.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(coin => {
-                            return(
-                                <BrowseCoinCell coin={coin} key={coin.id}/>
-                            )
-                        })
-                    }
-                                    <TablePagination
-                        showFirstButton={true}
-                        showLastButton={true}
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        // count={coinsState.length}
-                        count={filteredCoinState.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />  
-                </TableBody>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>
+                                Logo
+                            </TableCell>
+                            <TableCell>
+                                Name: Ticker
+                            </TableCell>
+                            <TableCell>
+                                Market Cap
+                            </TableCell>
+                            <TableCell>
+                                Price
+                            </TableCell>
+                            <TableCell>
+                                Price Change 24 Hours
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        { filteredCoinState.length > 0 &&
+                            filteredCoinState.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(coin => {
+                                return(
+                                    <BrowseCoinCell coin={coin} key={coin.id}/>
+                                )
+                            })
+                        }
+                                        <TablePagination
+                            showFirstButton={true}
+                            showLastButton={true}
+                            rowsPerPageOptions={[5, 10, 25]}
+                            component="div"
+                            // count={coinsState.length}
+                            count={filteredCoinState.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />  
+                    </TableBody>
                 </Table>
             </TableContainer>
         </Box>

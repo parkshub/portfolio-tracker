@@ -15,6 +15,10 @@ const UserSchema = mongoose.Schema(
             type: String,
             required: [true, "Please add password"]
         },
+        transactions: {
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: "Transaction"
+        }
     }
 )
 

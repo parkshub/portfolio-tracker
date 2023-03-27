@@ -14,49 +14,19 @@ import axios from 'axios'
 
 const API_URL = '/api/coin/'
 
+// const testCoin = async(data) => {
+
+//     console.log("getCoin service received id ", data.id, "and date ", data.date)
+//     const response = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=365`)).data.prices
+//     return response.data
+// }
+
+
 const getCoin = async(id) => {
-  const response = await axios.get(API_URL + 'getCoin')
-  return response.data
-    
 
-    // const info = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`)).data
-
-    // let daily = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`)).data.prices
-    // daily = daily.reverse().filter((x, i) => i % 12 === 0).reverse()
-    // const dailyChart = 
-    // [{
-    //     "id": "daily",
-    //     "color": "hsl(155, 70%, 50%)",
-    //     "data": []
-    // }]
-    // daily.forEach(x => dailyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(4,6).join(' '), "y": Number(x[1].toFixed(2))}))    
-
-    
-    // let monthly = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=91`)).data.prices
-    // monthly = monthly.reverse().filter((x, i) => i % 4 === 0).reverse()
-    // const monthlyChart = 
-    // [{
-    //     "id": "monthly",
-    //     "color": "hsl(155, 70%, 50%)",
-    //     "data": []
-    // }]
-    // monthly.forEach(x => monthlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))    
-
-
-    // let yearly = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=365`)).data.prices
-    // yearly = yearly.reverse().filter((x, i) => i % 16 === 0).reverse()
-    // const yearlyChart = 
-    // [{
-    //     "id": "yearly",
-    //     "color": "hsl(155, 70%, 50%)",
-    //     "data": []
-    // }]
-    // yearly.forEach(x => yearlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))  
-
-    // const res = {info, dailyChart, monthlyChart, yearlyChart}
-    // console.log(res)
-
-    // return res
+    console.log("getCoin service received id ", id)
+    const response = await axios.get(API_URL + `getCoin/${id}`)
+    return response.data
 }
 
 const getTopCoins = async() => {
@@ -73,10 +43,31 @@ const getAllCoins = async() => {
     return response.data
 }
 
+const txCoin = async(data) => {
+    console.log('tx service received ', data)
+    const response = await axios.post(API_URL + 'txCoin', data) // just a reminder config comes after the data you want to send
+    return response.data
+}
+
+const getTx = async() => {
+    console.log("gettx service ran")
+    const response = await axios.get(API_URL + 'getTx')
+    return response.data
+}
+
+const deleteTx = async(id) => {
+    const response = await axios.delete(API_URL + `deleteTx/${id}`)
+    return response.data
+}
+
 const coinService = {
     getCoin,
     getTopCoins,
-    getAllCoins
+    getAllCoins,
+    // testCoin,
+    txCoin,
+    getTx,
+    deleteTx
 }
 
 export default coinService
