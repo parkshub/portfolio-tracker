@@ -2,7 +2,7 @@ export const pieData = [
     {
       "id": "USDT",
       "label": "Tether",
-      "value": 10, // later i would need a function to do convert it to a percentage
+      "value": 10,
       "color": "hsl(56, 70%, 50%)"
     },
     {

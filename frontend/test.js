@@ -1,3 +1,13 @@
-let a = 123.126
+const currDate = new Date()
 
-console.log(a.toFixed(2))
+let splitDate = currDate.toUTCString().split(' ')
+
+splitDate[4] = '00:00:00'
+
+const slicedDate = splitDate.slice(0,5)
+slicedDate.push("UTC")
+const joinedDate = slicedDate.join(' ')
+
+const time = new Date(joinedDate).getTime()
+
+console.log(time)

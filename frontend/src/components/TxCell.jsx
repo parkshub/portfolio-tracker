@@ -6,6 +6,7 @@ import { Button } from '@mui/material'
 import { useDispatch } from 'react-redux';
 
 import { deleteTx } from '../features/coin/coinSlice';
+import { Link } from 'react-router-dom';
 
 const TxCell = ({coin}) => {
 
@@ -24,6 +25,7 @@ const TxCell = ({coin}) => {
                 <img src={coin.coinImage} alt="" />
             </TableCell>
             <TableCell>
+                <Link to={`/coins/${coin.coinId}`}>
                 { coin.coinId
                     .replace(/-/g, ' ')
                     .split(' ')
@@ -35,6 +37,7 @@ const TxCell = ({coin}) => {
                     .join(' ') 
                 } 
                 {': ' + coin.coinSymbol.toUpperCase() }
+                </Link>
             </TableCell>
             <TableCell>
                 {coin.type}

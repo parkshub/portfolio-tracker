@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import { convertDate } from '../../utils/convertDate'
+
 // https://api.coingecko.com/api/v3/coins/bitcoin
 // for individual coins
 
@@ -26,6 +28,11 @@ const getCoin = async(id) => {
 
     console.log("getCoin service received id ", id)
     const response = await axios.get(API_URL + `getCoin/${id}`)
+
+    if (response.data) {
+        
+    }
+
     return response.data
 }
 
@@ -43,20 +50,35 @@ const getAllCoins = async() => {
     return response.data
 }
 
-const txCoin = async(data) => {
+const txCoin = async(data, token) => {
     console.log('tx service received ', data)
-    const response = await axios.post(API_URL + 'txCoin', data) // just a reminder config comes after the data you want to send
+    const config = {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    }
+    const response = await axios.post(API_URL + 'txCoin', data, config) // just a reminder config comes after the data you want to send
     return response.data
 }
 
-const getTx = async() => {
+const getTx = async(token) => {
     console.log("gettx service ran")
-    const response = await axios.get(API_URL + 'getTx')
+    const config = {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    }
+    const response = await axios.get(API_URL + 'getTx', config)
     return response.data
 }
 
-const deleteTx = async(id) => {
-    const response = await axios.delete(API_URL + `deleteTx/${id}`)
+const deleteTx = async(id, token) => {
+    const config = {
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    }
+    const response = await axios.delete(API_URL + `deleteTx/${id}`, config)
     return response.data
 }
 

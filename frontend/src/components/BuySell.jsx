@@ -51,7 +51,6 @@ export default function BuySell({transaction, yearlyData, coinInfo}) {
 
   const handleChangeDate = (e) => {
 
-    if (!manualInput) {
       const userDate = String(e.$d)
       const splitDate = userDate.split(" ").slice(0, 5)
       splitDate.push("UTC")
@@ -59,15 +58,17 @@ export default function BuySell({transaction, yearlyData, coinInfo}) {
       const dateString = splitDate.join(' ')
 
       let UTCDate = new Date(dateString).getTime()
-      let tempPrice = yearlyData.filter(x => x.includes(UTCDate))[0][1]
-
-      setFormData((prev) => ({
-        ...prev,
-        price: tempPrice.toFixed(2),
-      }))
-      
       setDate(UTCDate)
-    }
+      
+      if (!manualInput) {
+
+        let tempPrice = yearlyData.filter(x => x.includes(UTCDate))[0][1]
+
+        setFormData((prev) => ({
+          ...prev,
+          price: tempPrice.toFixed(2),
+        }))      
+      }
 
   }
 
@@ -93,9 +94,9 @@ export default function BuySell({transaction, yearlyData, coinInfo}) {
 
   const submitTest = (e) => {
     e.preventDefault()
-    // const data = { coinId: coinInfo.id, coinSymbol: coinInfo.symbol, coinInfo.image,price: formData.price, amount: formData.amount, date, transaction, total } 
-    // coinInfo.image --> might not work because its image... thumb small or large, but it seemed to work for previous code so try this first.
+    // const data = { coinId: coinInfo.id, coinSymbol: coinInfo.symbol, coinImage: coinInfo.image.small, price: formData.price, amount: formData.amount, date, type: transaction , total}
     const data = { coinId: coinInfo.id, coinSymbol: coinInfo.symbol, coinImage: coinInfo.image.small, price: formData.price, amount: formData.amount, date, type: transaction , total}
+    console.log('submit button was pressed and this is data ', data)
     dispatch(txCoin(data))
   }
 

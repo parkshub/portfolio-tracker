@@ -69,7 +69,8 @@ export const txCoin = createAsyncThunk(
     async(data, thunkAPI) => {
         console.log('tx slice received ', data)
         try {
-            return await coinService.txCoin(data)
+            const token = thunkAPI.getState().auth.user.token
+            return await coinService.txCoin(data, token)
         } catch (error) {
             const message = error.response.data
             return thunkAPI.rejectWithValue(message)
@@ -82,7 +83,8 @@ export const getTx = createAsyncThunk(
     async(_, thunkAPI) => {
         try {
             console.log("get tx slice ran")
-            return await coinService.getTx()
+            const token = thunkAPI.getState().auth.user.token
+            return await coinService.getTx(token)
         } catch (error) {
             const message = error.response.data
             return thunkAPI.rejectWithValue(message)
@@ -94,7 +96,8 @@ export const deleteTx = createAsyncThunk(
     'coin/deleteTx',
     async(id, thunkAPI) => {
         try {
-            return await coinService.deleteTx(id)
+            const token = thunkAPI.getState().auth.user.token
+            return await coinService.deleteTx(id, token)
         } catch (error) {
             const message = error.response.data
             return thunkAPI.rejectWithValue(message)
@@ -185,11 +188,13 @@ export const coinSlice = createSlice({
                 state.isPending = true
                 state.isFulfilled = false
             })
-            .addCase(txCoin.fulfilled, (state) => {
+            .addCase(txCoin.fulfilled, (state, action) => {
                 state.isRejected = false
                 state.isPending = false
                 state.isFulfilled = true
+                state.coins = action.payload
             })
+
 
             .addCase(getTx.rejected, (state, action) => {
                 state.isRejected = true

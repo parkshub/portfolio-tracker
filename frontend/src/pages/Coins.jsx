@@ -39,8 +39,10 @@ const Coins = () => {
     const { coin, coins, isPending } = useSelector((state) => state.coin)
 
     
-    const filteredCoins = coins.filter((x) => x.coinId == id)
-    console.log(filteredCoins)
+    // const filteredCoins = coins.filter((x) => x.coinId == id)
+    // console.log(filteredCoins)
+
+    const [filteredCoins, setFilteredCoins] = useState(coins.filter((x) => x.coinId == id))
 
     const [value, setValue] = useState('daily');
     // uncomment this later
@@ -57,8 +59,12 @@ const Coins = () => {
         return () => {
             dispatch(reset())
         }
-
     },[dispatch, id])
+
+    useEffect(() => {
+        setFilteredCoins(coins.filter((x) => x.coinId == id))
+    }, [coins]) // by doing this you are saying when coins changes, call this
+
 
     // uncomment this later
     // useEffect(() => {

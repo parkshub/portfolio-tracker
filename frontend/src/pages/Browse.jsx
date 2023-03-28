@@ -39,7 +39,7 @@ export default function Browse() {
     // const [testValue, setTestValue] = useState("")
 
 
-    const handleChangetest = (event) => {
+    const handleSearchChange = (event) => {
         // console.log(event.target.value)
         // setTestValue(event.target.value)
         const filteredCoins = coins.filter(x => x.id.includes(event.target.value) || x.symbol.includes(event.target.value))
@@ -69,7 +69,7 @@ export default function Browse() {
 
     return (
         <Box>
-        <TextField onChange={handleChangetest}></TextField>
+            <TextField onChange={handleSearchChange}></TextField>
             <TableContainer sx={{ minWidth: 850 }}>
                 <Table>
                     <TableHead>
@@ -95,16 +95,15 @@ export default function Browse() {
                         { filteredCoinState.length > 0 &&
                             filteredCoinState.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(coin => {
                                 return(
-                                    <BrowseCoinCell coin={coin} key={coin.id}/>
+                                    <BrowseCoinCell key={coin.id} coin={coin}/>
                                 )
                             })
                         }
-                                        <TablePagination
+                        <TablePagination
                             showFirstButton={true}
                             showLastButton={true}
                             rowsPerPageOptions={[5, 10, 25]}
-                            component="div"
-                            // count={coinsState.length}
+                            // component="div"
                             count={filteredCoinState.length}
                             rowsPerPage={rowsPerPage}
                             page={page}
