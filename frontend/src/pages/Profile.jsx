@@ -37,9 +37,6 @@ const Profile = () => {
     const [rowsPerPage, setRowsPerPage] = useState(5)
 
     const pieData = generatePieData(coins)
-    console.log(pieData)
-
-    console.log(coins)
 
     const handleSearchChange = (event) => {
         const filteredCoins = coins.filter(x => x.coinId.includes(event.target.value) || x.coinSymbol.includes(event.target.value))

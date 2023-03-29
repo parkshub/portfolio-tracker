@@ -1,13 +1,12 @@
-const currDate = new Date()
+let a = {"b": 3, "c": 5, "d":10}
 
-let splitDate = currDate.toUTCString().split(' ')
+let replace = {
+    "b": 1000
+}
 
-splitDate[4] = '00:00:00'
+let b= {
+    ...a,
+    ...replace
+}
 
-const slicedDate = splitDate.slice(0,5)
-slicedDate.push("UTC")
-const joinedDate = slicedDate.join(' ')
-
-const time = new Date(joinedDate).getTime()
-
-console.log(time)
+console.log(b)

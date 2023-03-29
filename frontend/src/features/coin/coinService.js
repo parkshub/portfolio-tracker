@@ -27,25 +27,58 @@ const API_URL = '/api/coin/'
 const getCoin = async(id) => {
 
     console.log("getCoin service received id ", id)
+
+    const time = convertDate()
+
+    // ** do something like below to set data and get data
+    // const response = {"coin": JSON.parse(JSON.stringify(response.data))}
+    // response.time = convertDate()
+    
+    // localStorage.setItem('COINNAME SHOULD BE ID', JSON.stringify(response))
+
+    // return response.coin
+
+    // ** and if we're only getting daily
+
+    // const storage = JSON.parse(localStorage.getItem('COINNAME'))
+    // const coin = storage.coin
+    // coin.daily = response.data.dailyDataORSOMETHING !! we have to specify this since we're also going to be getting info !!
+
+    // localStorage.setItem('COINNAME', coin)
+
+    // ** when there is nothing in storage it's null
+    // ** when appending to original storage {...prev, ...new} works
+
+    // pseudo code
+    // check if there is entry in localstorage with that coins name aka id
+    // if yes
+        // compare time there and time now
+            // if different
+                // set param of truth to true (probably dont need and if else here)
+            // else
+                // set params of truth to false
+    // if localstorage is null
+        // set truth params to true
+        // get all data and do normally and set localstorage like above
+    
+    // i can probably make this simpler by saying...if time before or null
+        // get all and do normally
+    // else
+        // get localstorage .coin, update only daily values and info
+        // set localstorage
+        // send the whole data (including info, monthly, yearly) with new values for daily
     const response = await axios.get(API_URL + `getCoin/${id}`)
-
-    if (response.data) {
-        
-    }
-
     return response.data
 }
 
 const getTopCoins = async() => {
-    // const res = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false')
-    // return res.data
+
     const response = await axios.get(API_URL + 'getTopCoins')
     return response.data
 }
 
 const getAllCoins = async() => {
-    // const res = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false')
-    // return res.data
+
     const response = await axios.get(API_URL + 'getAllCoins')
     return response.data
 }
@@ -57,7 +90,7 @@ const txCoin = async(data, token) => {
             authorization: `Bearer ${token}`
         }
     }
-    const response = await axios.post(API_URL + 'txCoin', data, config) // just a reminder config comes after the data you want to send
+    const response = await axios.post(API_URL + 'txCoin', data, config)
     return response.data
 }
 

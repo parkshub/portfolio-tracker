@@ -5,7 +5,9 @@ const auth = require('../middleware/authMiddleware')
 
 router.get('/', ()=>console.log('hello'))
 
+// router.get('/getCoin/:id/:truth', coinController.getCoin)
 router.get('/getCoin/:id', coinController.getCoin)
+
 router.get('/getTopCoins', coinController.getTopCoins)
 router.get('/getAllCoins', coinController.getAllCoins)
 
