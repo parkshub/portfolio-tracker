@@ -38,6 +38,8 @@ const Coins = () => {
 
     const { coin, coins, isPending } = useSelector((state) => state.coin)
 
+    console.log(coin)
+
     
     // const filteredCoins = coins.filter((x) => x.coinId == id)
     // console.log(filteredCoins)
@@ -45,8 +47,9 @@ const Coins = () => {
     const [filteredCoins, setFilteredCoins] = useState(coins.filter((x) => x.coinId == id))
 
     const [value, setValue] = useState('daily');
+
     // uncomment this later
-    // const [chartData, setChartData] = useState(coin.dailyChart) 
+    const [chartData, setChartData] = useState(coin.dailyChart) 
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -67,16 +70,16 @@ const Coins = () => {
 
 
     // uncomment this later
-    // useEffect(() => {
-    //     setChartData(coin[value + 'Chart'])
-    // },[coin, value])
+    useEffect(() => {
+        setChartData(coin[value + 'Chart'])
+    },[coin, value])
 
     return (
         <Container maxWidth="xl">
             {/* get rid of these two below */}
-            <BuySell transaction={"buy"} yearlyData={coin.yearlyRaw} coinInfo={coin.info}></BuySell>
-            <BuySell transaction={"sell"} yearlyData={coin.yearlyRaw} coinInfo={coin.info}></BuySell>
-            {/* <Grid container>
+            {/* <BuySell transaction={"buy"} yearlyData={coin.yearlyRaw} coinInfo={coin.info}></BuySell>
+            <BuySell transaction={"sell"} yearlyData={coin.yearlyRaw} coinInfo={coin.info}></BuySell> */}
+            <Grid container>
                 { coin !== '' &&
                     <Grid item container xs={12}>
                         <Grid item xs={12} md={6} textAlign="center" height={400}>
@@ -114,7 +117,7 @@ const Coins = () => {
                         </Grid>
                     </Grid>
                 }
-            </Grid> */}
+            </Grid>
             <TableContainer>
                 <Table>
                     <TableHead>

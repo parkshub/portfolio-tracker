@@ -1,3 +1,4 @@
+import { responsiveFontSizes } from '@mui/material'
 import axios from 'axios'
 
 import { convertDate } from '../../utils/convertDate'
@@ -30,45 +31,39 @@ const getCoin = async(id) => {
 
     const time = convertDate()
 
-    // ** do something like below to set data and get data
-    // const response = {"coin": JSON.parse(JSON.stringify(response.data))}
-    // response.time = convertDate()
-    
-    // localStorage.setItem('COINNAME SHOULD BE ID', JSON.stringify(response))
+    const storageCoin = localStorage.getItem(id) ? localStorage.getItem(id) : ''
 
-    // return response.coin
+    const getAll = storageCoin === '' || storageCoin.time < time ? true : false
 
-    // ** and if we're only getting daily
 
-    // const storage = JSON.parse(localStorage.getItem('COINNAME'))
-    // const coin = storage.coin
-    // coin.daily = response.data.dailyDataORSOMETHING !! we have to specify this since we're also going to be getting info !!
+    // uncomment this
+    const response = await axios.get(API_URL + `getCoin/${id}/${getAll}`)
 
-    // localStorage.setItem('COINNAME', coin)
+    if (getAll) {
+        // input time into it
+        console.log('coin controller had to get all')
 
-    // ** when there is nothing in storage it's null
-    // ** when appending to original storage {...prev, ...new} works
+        // uncomment below not the second one, keep that commented
+        const data = {"time": time, "coin": JSON.parse(JSON.stringify(response.data))} // parsing is not need but just in case, after everything is done try below
+        // const data = {"time": time, "coin": response.data}
 
-    // pseudo code
-    // check if there is entry in localstorage with that coins name aka id
-    // if yes
-        // compare time there and time now
-            // if different
-                // set param of truth to true (probably dont need and if else here)
-            // else
-                // set params of truth to false
-    // if localstorage is null
-        // set truth params to true
-        // get all data and do normally and set localstorage like above
-    
-    // i can probably make this simpler by saying...if time before or null
-        // get all and do normally
-    // else
-        // get localstorage .coin, update only daily values and info
-        // set localstorage
-        // send the whole data (including info, monthly, yearly) with new values for daily
-    const response = await axios.get(API_URL + `getCoin/${id}`)
-    return response.data
+        localStorage.setItem(id, JSON.stringify(data))
+        return response.data
+
+    } else {
+        console.log('coin controller only updated daily and info')
+        
+        const data = JSON.parse(localStorage.getItem(id))
+        // info, dailyChart, monthlyChart, yearlyChart, yearlyRaw
+
+        // uncomment two below
+        data.coin.info = response.data.info
+        data.coin.dailyChart = response.data.dailyChart
+
+        localStorage.setItem(id, JSON.stringify(data))
+
+        return data.coin
+    }
 }
 
 const getTopCoins = async() => {
@@ -90,6 +85,7 @@ const txCoin = async(data, token) => {
             authorization: `Bearer ${token}`
         }
     }
+
     const response = await axios.post(API_URL + 'txCoin', data, config)
     return response.data
 }

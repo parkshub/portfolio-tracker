@@ -27,44 +27,103 @@ exports.test = async(req, res) => {
 }
 
 
+// exports.getCoin = async(req, res) => {
+
+//     console.log('get coin controller ran')
+
+//     const {id} = req.params
+
+//     const info = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`)).data
+
+//     // let daily = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`)).data.prices
+//     // daily = daily.reverse().filter((x, i) => i % 12 === 0).reverse()
+//     // const dailyChart = 
+//     // [{
+//     //     "id": "daily",
+//     //     "color": "hsl(155, 70%, 50%)",
+//     //     "data": []
+//     // }]
+//     // daily.forEach(x => dailyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(4,6).join(' '), "y": Number(x[1].toFixed(2))}))    
+
+//     // let monthly = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=91`)).data.prices
+//     // monthly = monthly.reverse().filter((x, i) => i % 4 === 0).reverse()
+//     // const monthlyChart = 
+//     // [{
+//     //     "id": "monthly",
+//     //     "color": "hsl(155, 70%, 50%)",
+//     //     "data": []
+//     // }]
+//     // monthly.forEach(x => monthlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))    
+
+//     // let yearlyRaw = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=365`)).data.prices
+//     // // console.log(yearly)
+//     // let yearly = yearlyRaw.reverse().filter((x, i) => i % 16 === 0).reverse()
+//     // const yearlyChart = 
+//     // [{
+//     //     "id": "yearly",
+//     //     "color": "hsl(155, 70%, 50%)",
+//     //     "data": []
+//     // }]
+//     // yearly.forEach(x => yearlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))
+
+//     // if (!info || !daily || !monthly || !yearly) {
+//     //     res.status(500).send("Could no retrieve data, please refresh.")
+//     // }
+
+//     // res.status(201).json({info, dailyChart, monthlyChart, yearlyChart, yearlyRaw})
+//     // res.status(201).json({info, yearlyRaw}) // erase this later
+//     res.status(201).json({info}) // erase this later
+// }
+
+
 exports.getCoin = async(req, res) => {
 
     console.log('get coin controller ran')
 
-    const {id} = req.params
+    const { id, getAll } = req.params
 
     const info = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`)).data
 
-    // let daily = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`)).data.prices
-    // daily = daily.reverse().filter((x, i) => i % 12 === 0).reverse()
-    // const dailyChart = 
-    // [{
-    //     "id": "daily",
-    //     "color": "hsl(155, 70%, 50%)",
-    //     "data": []
-    // }]
-    // daily.forEach(x => dailyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(4,6).join(' '), "y": Number(x[1].toFixed(2))}))    
+    let daily = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`)).data.prices
+    daily = daily.reverse().filter((x, i) => i % 12 === 0).reverse()
+    const dailyChart = 
+    [{
+        "id": "daily",
+        "color": "hsl(155, 70%, 50%)",
+        "data": []
+    }]
+    daily.forEach(x => dailyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(4,6).join(' '), "y": Number(x[1].toFixed(2))}))
 
-    // let monthly = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=91`)).data.prices
-    // monthly = monthly.reverse().filter((x, i) => i % 4 === 0).reverse()
-    // const monthlyChart = 
-    // [{
-    //     "id": "monthly",
-    //     "color": "hsl(155, 70%, 50%)",
-    //     "data": []
-    // }]
-    // monthly.forEach(x => monthlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))    
 
-    // let yearlyRaw = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=365`)).data.prices
-    // // console.log(yearly)
-    // let yearly = yearlyRaw.reverse().filter((x, i) => i % 16 === 0).reverse()
-    // const yearlyChart = 
-    // [{
-    //     "id": "yearly",
-    //     "color": "hsl(155, 70%, 50%)",
-    //     "data": []
-    // }]
-    // yearly.forEach(x => yearlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))
+    if (!getAll) {
+
+        res.status(201).json({info, dailyChart})
+
+    } else {
+
+        let monthly = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=91`)).data.prices
+        monthly = monthly.reverse().filter((x, i) => i % 4 === 0).reverse()
+        const monthlyChart = 
+        [{
+            "id": "monthly",
+            "color": "hsl(155, 70%, 50%)",
+            "data": []
+        }]
+        monthly.forEach(x => monthlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))    
+
+        let yearlyRaw = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=365`)).data.prices
+        // console.log(yearly)
+        let yearly = yearlyRaw.reverse().filter((x, i) => i % 16 === 0).reverse()
+        const yearlyChart = 
+        [{
+            "id": "yearly",
+            "color": "hsl(155, 70%, 50%)",
+            "data": []
+        }]
+        yearly.forEach(x => yearlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))
+
+        res.status(201).json({info, dailyChart, monthlyChart, yearlyChart, yearlyRaw})
+    }
 
     // if (!info || !daily || !monthly || !yearly) {
     //     res.status(500).send("Could no retrieve data, please refresh.")
@@ -72,7 +131,7 @@ exports.getCoin = async(req, res) => {
 
     // res.status(201).json({info, dailyChart, monthlyChart, yearlyChart, yearlyRaw})
     // res.status(201).json({info, yearlyRaw}) // erase this later
-    res.status(201).json({info}) // erase this later
+    // res.status(201).json({info}) // erase this later
 }
 
 exports.getTopCoins = async(req, res) => {
