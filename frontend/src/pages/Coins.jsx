@@ -37,9 +37,6 @@ const Coins = () => {
     const { id } = useParams()
 
     const { coin, coins, isPending } = useSelector((state) => state.coin)
-
-    console.log(coin)
-
     
     // const filteredCoins = coins.filter((x) => x.coinId == id)
     // console.log(filteredCoins)

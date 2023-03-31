@@ -42,6 +42,7 @@ export const getCoin = createAsyncThunk(
 export const getTopCoins = createAsyncThunk(
     'coin/getTopCoins',
     async(_, thunkAPI) => {
+        console.log('gettopcoins slice')
         try {
             return await coinService.getTopCoins()
         } catch (error) {

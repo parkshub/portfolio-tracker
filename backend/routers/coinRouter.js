@@ -8,8 +8,8 @@ router.get('/', ()=>console.log('hello'))
 router.get('/getCoin/:id/:getAll', coinController.getCoin)
 // router.get('/getCoin/:id', coinController.getCoin)
 
-router.get('/getTopCoins', coinController.getTopCoins)
-router.get('/getAllCoins', coinController.getAllCoins)
+router.get('/getTopCoins/:getTopCoins', coinController.getTopCoins)
+router.get('/getAllCoins/:getAllCoins', coinController.getAllCoins)
 
 
 router.post('/test', coinController.test)

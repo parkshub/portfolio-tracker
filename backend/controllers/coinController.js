@@ -82,24 +82,24 @@ exports.getCoin = async(req, res) => {
 
     const { id, getAll } = req.params
 
-    const info = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`)).data
+    const truth = getAll === "true"
 
-    let daily = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`)).data.prices
-    daily = daily.reverse().filter((x, i) => i % 12 === 0).reverse()
-    const dailyChart = 
-    [{
-        "id": "daily",
-        "color": "hsl(155, 70%, 50%)",
-        "data": []
-    }]
-    daily.forEach(x => dailyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(4,6).join(' '), "y": Number(x[1].toFixed(2))}))
+    if (truth) {
+
+        console.log("get coin controller api ran")
 
 
-    if (!getAll) {
+        const info = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}`)).data
 
-        res.status(201).json({info, dailyChart})
-
-    } else {
+        let daily = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`)).data.prices
+        daily = daily.reverse().filter((x, i) => i % 12 === 0).reverse()
+        const dailyChart = 
+        [{
+            "id": "daily",
+            "color": "hsl(155, 70%, 50%)",
+            "data": []
+        }]
+        daily.forEach(x => dailyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(4,6).join(' '), "y": Number(x[1].toFixed(2))}))
 
         let monthly = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=91`)).data.prices
         monthly = monthly.reverse().filter((x, i) => i % 4 === 0).reverse()
@@ -123,6 +123,10 @@ exports.getCoin = async(req, res) => {
         yearly.forEach(x => yearlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))
 
         res.status(201).json({info, dailyChart, monthlyChart, yearlyChart, yearlyRaw})
+
+    } else {
+        console.log("get coin controller api didn't need to run")
+        res.status(201).json("Using localstorage data")
     }
 
     // if (!info || !daily || !monthly || !yearly) {
@@ -135,25 +139,52 @@ exports.getCoin = async(req, res) => {
 }
 
 exports.getTopCoins = async(req, res) => {
-    const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false')
+
+    const { getTopCoins } = req.params
     
-    if (response.data) {
-        return res.status(201).json(response.data)
+    console.log("getTopCoins controller", getTopCoins)
+
+    const truth = getTopCoins === "true"
+
+    if (truth) { // not sure why but not working without truth statement
+        console.log('topcoins gecko api request sent')
+        const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false')
+        
+        if (response.data) {
+            return res.status(201).json(response.data)
+        } else {
+            return res.status(500).send("Could not load data")
+        }   
+    } else {
+        console.log('topcoins gecko api request NOT NEEDED')
+        return res.status(201).json("Using localstorage data")
     }
-    else {
-        return res.status(500).send("Could not load data")
-    }   
 }
 
 exports.getAllCoins = async(req, res) => {
-    const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false')
 
-    if (response.data) {
-        return res.status(201).json(response.data)
+    const { getAllCoins } = req.params
+
+    console.log("this is truth in controller" , getAllCoins)
+
+    const truth = getAllCoins === "true"
+
+
+    if (truth) {
+        console.log('allcoins gecko api request sent')
+        const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false')
+        
+        if (response.data) {
+            res.status(201).json(response.data)
+        }
+        else {
+            res.status(500).send("Could not load data")
+        }   
+        
+    } else {
+        console.log('allcoins gecko api request NOT NEEDED')
+        res.status(201).json("Using localstorage data")
     }
-    else {
-        return res.status(500).send("Could not load data")
-    }   
 }
 
 exports.txCoin = async(req, res) => {

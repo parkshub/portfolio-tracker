@@ -31,17 +31,16 @@ const getCoin = async(id) => {
 
     const time = convertDate()
 
-    const storageCoin = localStorage.getItem(id) ? localStorage.getItem(id) : ''
+    const storageCoin = localStorage.getItem(id) !== null ? JSON.parse(localStorage.getItem(id)) : ''
 
     const getAll = storageCoin === '' || storageCoin.time < time ? true : false
-
 
     // uncomment this
     const response = await axios.get(API_URL + `getCoin/${id}/${getAll}`)
 
     if (getAll) {
         // input time into it
-        console.log('coin controller had to get all')
+        console.log('coin service is telling controller to get all and received', response.data)
 
         // uncomment below not the second one, keep that commented
         const data = {"time": time, "coin": JSON.parse(JSON.stringify(response.data))} // parsing is not need but just in case, after everything is done try below
@@ -51,16 +50,16 @@ const getCoin = async(id) => {
         return response.data
 
     } else {
-        console.log('coin controller only updated daily and info')
-        
+        console.log('coin service just using localstorage')
+
         const data = JSON.parse(localStorage.getItem(id))
         // info, dailyChart, monthlyChart, yearlyChart, yearlyRaw
 
-        // uncomment two below
-        data.coin.info = response.data.info
-        data.coin.dailyChart = response.data.dailyChart
+        // // uncomment two below
+        // data.coin.info = response.data.info
+        // data.coin.dailyChart = response.data.dailyChart
 
-        localStorage.setItem(id, JSON.stringify(data))
+        // localStorage.setItem(id, JSON.stringify(data))
 
         return data.coin
     }
@@ -68,14 +67,56 @@ const getCoin = async(id) => {
 
 const getTopCoins = async() => {
 
-    const response = await axios.get(API_URL + 'getTopCoins')
-    return response.data
+    console.log('gettopcoins service')
+
+    const time = convertDate()
+
+    const storageCoin = localStorage.getItem('topCoins') !== null ? JSON.parse(localStorage.getItem('topCoins')) : ''
+
+    const getTopCoins = storageCoin === '' || storageCoin.time < time ? true : false
+    console.log("this is truth", getTopCoins)
+
+    const response = await axios.get(API_URL + `getTopCoins/${getTopCoins}`)
+
+    console.log('service received response:', response)
+
+    if (getTopCoins) {
+        console.log('service got all coins')
+        const data = {"time": time, "coins": JSON.parse(JSON.stringify(response.data))}
+        localStorage.setItem('topCoins', JSON.stringify(data))
+        return data.coins
+    } else {
+        console.log("service didn't need all coins")
+        const data = JSON.parse(localStorage.getItem('topCoins'))
+        return data.coins
+    }
+    // return response.data
 }
 
 const getAllCoins = async() => {
 
-    const response = await axios.get(API_URL + 'getAllCoins')
-    return response.data
+    const time = convertDate()
+
+    const storageCoin = localStorage.getItem('allCoins') !== null ? JSON.parse(localStorage.getItem('allCoins')) : ''
+
+    const getAllCoins = storageCoin === '' || storageCoin.time < time ? true : false
+    console.log("this is truth", getAllCoins)
+
+    
+
+    const response = await axios.get(API_URL + `getAllCoins/${getAllCoins}`)
+
+    if (getAllCoins) {
+        console.log('service got all coins')
+        const data = {"time": time, "coins": JSON.parse(JSON.stringify(response.data))}
+        localStorage.setItem('allCoins', JSON.stringify(data))
+        return data.coins
+    } else {
+        console.log("service didn't need all coins")
+        const data = JSON.parse(localStorage.getItem('allCoins'))
+        return data.coins
+    }
+    // return response.data
 }
 
 const txCoin = async(data, token) => {

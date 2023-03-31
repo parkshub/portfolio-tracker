@@ -10,8 +10,17 @@ import TableRow from '@mui/material/TableRow';
 import { Link } from 'react-router-dom';
 
 const BrowseCoinCell = ({coin}) => {
+
+    const top3List = ['bitcoin', 'ethereum']
+    const randomizer = Math.floor(Math.random() * (2) ) + 0;
+    const coinLink = top3List[randomizer]
+    // this is done to limit the coin pages to just bitcoin and ethereum. 
+    // gathering historical data from multiple coins resulted reaching the api call limit
+    
+
     return (
-        <TableRow component={Link} to={`/coins/${coin.id}`}>
+        // <TableRow component={Link} to={`/coins/${coin.id}`}>
+        <TableRow component={Link} to={`/coins/${coinLink}`}>
             <TableCell>
                 <img src={coin.image} alt="" width="50px"/>
             </TableCell>

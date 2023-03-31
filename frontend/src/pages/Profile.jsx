@@ -31,6 +31,38 @@ const Profile = () => {
     
     const { coins, isPending, isRejected, message } = useSelector((state) => state.coin)
 
+    console.log('this is test', Object.entries(localStorage))
+    // this is the way to get the list of coins that you need
+    // coins that are not in localstorage and coins haven't been updated in 24 hours
+
+    const uniqueCoinsUser = [...new Set(coins.map(coin => coin.coinId))]
+    const cache = {}
+
+    Object.entries(localStorage).forEach((x) => {
+        if (uniqueCoinsUser.includes(x[0])) { 
+            cache[x[0]]=JSON.parse(x[1]) 
+        }
+    })
+
+    const missing = []
+    const today = new Date().getTime
+
+    uniqueCoinsUser.forEach((x) => {
+        // 31622400000 if 366 days difference
+        // 7862400000 if 91 days difference
+
+        if(!Object.keys(cache).includes(x) || today - cache[x]['time'] > 86400000) {
+            missing.push(x)
+        }
+    })
+
+    console.log('this is cache', cache)
+
+    console.log('these are missing ', missing)
+
+    // run the cache loop again to get all the coins after getting info from missing coins
+
+    //
     
     const [filteredCoinState, setFilteredCoinState] = useState(coins)
     const [page, setPage] = useState(0)
