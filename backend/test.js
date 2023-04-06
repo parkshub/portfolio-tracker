@@ -1,5 +1,4 @@
-let a = [1, 2, 3]
+let arr1 = {1: 2, 3:4}
 
-let b = [1,2,3]
 
-console.log(a-b)
+console.log(Object.entries(arr1))

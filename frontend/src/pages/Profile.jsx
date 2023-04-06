@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 
 import ExamplePie from '../components/ExamplePie'
+import ExampleLine from '../components/ExampleLine'
 
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -21,6 +22,12 @@ import { Button } from '@mui/material'
 import { useState } from 'react';
 
 import { generatePieData } from '../utils/generatePieData';
+import { generateLineData } from '../utils/generateLineData';
+import { convertDate } from '../utils/convertDate';
+
+import { Grid, Paper, Container} from '@mui/material'
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 
 const Profile = () => {
@@ -31,44 +38,57 @@ const Profile = () => {
     
     const { coins, isPending, isRejected, message } = useSelector((state) => state.coin)
 
-    console.log('this is test', Object.entries(localStorage))
-    // this is the way to get the list of coins that you need
-    // coins that are not in localstorage and coins haven't been updated in 24 hours
 
-    const uniqueCoinsUser = [...new Set(coins.map(coin => coin.coinId))]
-    const cache = {}
 
-    Object.entries(localStorage).forEach((x) => {
-        if (uniqueCoinsUser.includes(x[0])) { 
-            cache[x[0]]=JSON.parse(x[1]) 
-        }
-    })
+    // const uniqueCoinsUser = [...new Set(coins.map(coin => coin.coinId))]
+    // console.log('this was unique coins user', uniqueCoinsUser)
+    // const cache = {}
 
-    const missing = []
-    const today = new Date().getTime
+    // Object.entries(localStorage).forEach((x) => {
+    //     if (uniqueCoinsUser.includes(x[0])) { 
+    //         cache[x[0]]=JSON.parse(x[1]) 
+    //     }
+    // })
+    // console.log('this was cache', cache)
 
-    uniqueCoinsUser.forEach((x) => {
-        // 31622400000 if 366 days difference
-        // 7862400000 if 91 days difference
+    // const missing = []
+    // const today = new Date().getTime
 
-        if(!Object.keys(cache).includes(x) || today - cache[x]['time'] > 86400000) {
-            missing.push(x)
-        }
-    })
+    // uniqueCoinsUser.forEach((x) => {
 
-    console.log('this is cache', cache)
+    //     if(!Object.keys(cache).includes(x) || today - cache[x]['time'] > 86400000) {
+    //         missing.push(x)
+    //     }
+    // })
 
-    console.log('these are missing ', missing)
+    // console.log('this was missing', missing)
 
-    // run the cache loop again to get all the coins after getting info from missing coins
 
-    //
-    
+    // RIGHT NOW THE ISSUE IS THAT THESE ABOVE THINGS TRY TO RUN BEFORE COINS IS LOADED, SO IT SENDING EMPTY STUFF. MAKE IT SO THAT IT ONLY RUNS WHEN COINS IS AVAIABLE
+
+
+    // const {yearlyLineData, monthlyLineData, dailyLineData} = generateLineData(cache, missing, uniqueCoinsUser, coins)
+
+    // const lineGraph = {'yearly': yearlyLineData, 'monthly': monthlyLineData, 'daily': dailyLineData}
+
+
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+        
+    const [value, setValue] = useState('daily');
+    // const [chartData, setChartData] = useState(lineGraph.value)
+
     const [filteredCoinState, setFilteredCoinState] = useState(coins)
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
+    const [lineGraph, setLineGraph] = useState('')
 
     const pieData = generatePieData(coins)
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
 
     const handleSearchChange = (event) => {
         const filteredCoins = coins.filter(x => x.coinId.includes(event.target.value) || x.coinSymbol.includes(event.target.value))
@@ -90,15 +110,66 @@ const Profile = () => {
 
     useEffect(() => {
         setFilteredCoinState(coins)
+
+        ////////////////////////////////
+        ////////////////////////////////
+        const uniqueCoinsUser = [...new Set(coins.map(coin => coin.coinId))]
+        const cache = {}
+
+        Object.entries(localStorage).forEach((x) => {
+            if (uniqueCoinsUser.includes(x[0])) { 
+                cache[x[0]]=JSON.parse(x[1]) 
+            }
+        })
+
+        const missing = []
+        const today = new Date().getTime
+
+        uniqueCoinsUser.forEach((x) => {
+
+            if(!Object.keys(cache).includes(x) || today - cache[x]['time'] > 86400000) {
+                missing.push(x)
+            }
+        })
+
+        const {yearlyLineData, monthlyLineData, dailyLineData} = generateLineData(cache, missing, uniqueCoinsUser, coins)
+
+        setLineGraph({'yearly': yearlyLineData, 'monthly': monthlyLineData, 'daily': dailyLineData})
+        ////////////////////////////////
+        ////////////////////////////////
+        // console.log(coins)
+
     }, [coins]) // by doing this you are saying when coins changes, call this
 
     return (
         // there should also be graphs and data here
         <Box>
             {/* <TextField onChange={handleChangetest}></TextField> */}
-            <Box height={400}>
+            <Grid item container height={350} xs={12}>
                 <ExamplePie data={pieData}></ExamplePie>
-            </Box>
+            </Grid>
+
+            <Grid item container height={350} xs={12}>
+                <ExampleLine data={lineGraph[value]} />
+            </Grid>
+
+            <Grid item xs={12}>
+                <Box sx={{ width: '100%' }} display="flex" justifyContent="center">
+                    <Tabs
+                        value={value}
+                        onChange={ handleChange }
+                        textColor="primary"
+                        indicatorColor="primary"
+                        aria-label="secondary tabs example"
+                    >
+                        <Tab value="daily" label="daily" sx={{ fontSize: 10 }}/>
+                        <Tab value="monthly" label="monthly" sx={{ fontSize: 10 }}/>
+                        <Tab value="yearly" label="yearly" sx={{ fontSize: 10 }}/>
+                    </Tabs>
+                </Box>                    
+            </Grid>
+
+
             <TextField onChange={handleSearchChange}></TextField>
             <TableContainer>
                 <Table>

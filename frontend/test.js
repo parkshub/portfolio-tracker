@@ -13381,13 +13381,26 @@ let coins = [
         "type": "buy",
         "__v": 0
     }
-]
+] // these are transactions
 
 let coinsSorted = coins.sort((a, b) => a.date - b.date)
 
 console.log(window.localStorage.getItem('user'))
 
 // because im storing a lot in localstorage would have to do something different for the first step
+
+// [{ this is how data should look like
+//     "id": "japan",
+//     "color": "hsl(68, 70%, 50%)",
+//     "data": [
+//       {
+//         "x": "plane",
+//         "y": 211
+//       },
+//       {
+
+//       }
+// ]
 
 
 // STEP 1
