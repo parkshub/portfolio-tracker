@@ -30,6 +30,18 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 
+///////////////////////////////
+// I THINK I KNOW THE SOLUTION 04.11.23
+//////////////////////////////
+// MAKE THE FUNCTION RETURN '' OR [] OR {} OR WHATEVER IT USUALLY RETURNS BUT EMPTY
+// AND MAKE THE GRAPH PART IN REACT ONLY RENDER USING A CONDITIONAL LIKE VAR!=='' && RENDER
+
+
+// MAIN ISSUE RIGHT NOW IS THAT GENERATELINEDATA IS BEING RUN WHEN ALL THE DATA ISN'T COMPLETELY LOADED RESULTING IN ERRORS DURING THE FUNCTION CALL, PUT THE PART THAT NEEDS TO BE RUN HERE IN USEFFECT, BUT STILL NOT WORKING MIGHT NEED TO CREATE AN ASYNC THUNK FOR IT
+
+//!!! I HAVE AN IDEA...MAYBE USE EXAMPLE LINE DATA AS PLACEHOLDER
+//!!! OR! DONT SHOW LINE GRAPH UNTIL LINEGRAPH STATE IS NOT EQUAL TO ''
+
 const Profile = () => {
 
     const dispatch = useDispatch()
@@ -37,40 +49,6 @@ const Profile = () => {
     const { user } = useSelector((state) => state.auth)
     
     const { coins, isPending, isRejected, message } = useSelector((state) => state.coin)
-
-
-
-    // const uniqueCoinsUser = [...new Set(coins.map(coin => coin.coinId))]
-    // console.log('this was unique coins user', uniqueCoinsUser)
-    // const cache = {}
-
-    // Object.entries(localStorage).forEach((x) => {
-    //     if (uniqueCoinsUser.includes(x[0])) { 
-    //         cache[x[0]]=JSON.parse(x[1]) 
-    //     }
-    // })
-    // console.log('this was cache', cache)
-
-    // const missing = []
-    // const today = new Date().getTime
-
-    // uniqueCoinsUser.forEach((x) => {
-
-    //     if(!Object.keys(cache).includes(x) || today - cache[x]['time'] > 86400000) {
-    //         missing.push(x)
-    //     }
-    // })
-
-    // console.log('this was missing', missing)
-
-
-    // RIGHT NOW THE ISSUE IS THAT THESE ABOVE THINGS TRY TO RUN BEFORE COINS IS LOADED, SO IT SENDING EMPTY STUFF. MAKE IT SO THAT IT ONLY RUNS WHEN COINS IS AVAIABLE
-
-
-    // const {yearlyLineData, monthlyLineData, dailyLineData} = generateLineData(cache, missing, uniqueCoinsUser, coins)
-
-    // const lineGraph = {'yearly': yearlyLineData, 'monthly': monthlyLineData, 'daily': dailyLineData}
-
 
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -109,32 +87,37 @@ const Profile = () => {
     },[dispatch])
 
     useEffect(() => {
+        console.log('useeffect ran and coins values is ', coins)
         setFilteredCoinState(coins)
 
         ////////////////////////////////
         ////////////////////////////////
-        const uniqueCoinsUser = [...new Set(coins.map(coin => coin.coinId))]
-        const cache = {}
+        // const uniqueCoinsUser = [...new Set(coins.map(coin => coin.coinId))]
+        // const cache = {}
 
-        Object.entries(localStorage).forEach((x) => {
-            if (uniqueCoinsUser.includes(x[0])) { 
-                cache[x[0]]=JSON.parse(x[1]) 
-            }
-        })
+        // Object.entries(localStorage).forEach((x) => {
+        //     if (uniqueCoinsUser.includes(x[0])) { 
+        //         cache[x[0]]=JSON.parse(x[1]) 
+        //     }
+        // })
 
-        const missing = []
-        const today = new Date().getTime
+        // const missing = []
+        // const today = new Date().getTime
 
-        uniqueCoinsUser.forEach((x) => {
+        // uniqueCoinsUser.forEach((x) => {
 
-            if(!Object.keys(cache).includes(x) || today - cache[x]['time'] > 86400000) {
-                missing.push(x)
-            }
-        })
+        //     if(!Object.keys(cache).includes(x) || today - cache[x]['time'] > 86400000) {
+        //         missing.push(x)
+        //     }
+        // })
 
-        const {yearlyLineData, monthlyLineData, dailyLineData} = generateLineData(cache, missing, uniqueCoinsUser, coins)
+        
+        // console.log('this is it ',cache, missing, uniqueCoinsUser, coins)
+        
+        // // const {yearlyLineData, monthlyLineData, dailyLineData} = generateLineData(cache, missing, uniqueCoinsUser, coins)
+        // // setLineGraph({'yearly': yearlyLineData, 'monthly': monthlyLineData, 'daily': dailyLineData})
 
-        setLineGraph({'yearly': yearlyLineData, 'monthly': monthlyLineData, 'daily': dailyLineData})
+        
         ////////////////////////////////
         ////////////////////////////////
         // console.log(coins)
@@ -149,7 +132,7 @@ const Profile = () => {
                 <ExamplePie data={pieData}></ExamplePie>
             </Grid>
 
-            <Grid item container height={350} xs={12}>
+            {/* <Grid item container height={350} xs={12}>
                 <ExampleLine data={lineGraph[value]} />
             </Grid>
 
@@ -167,7 +150,7 @@ const Profile = () => {
                         <Tab value="yearly" label="yearly" sx={{ fontSize: 10 }}/>
                     </Tabs>
                 </Box>                    
-            </Grid>
+            </Grid> */}
 
 
             <TextField onChange={handleSearchChange}></TextField>
