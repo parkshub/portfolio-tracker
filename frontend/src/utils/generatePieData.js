@@ -45,7 +45,7 @@ exports.generatePieData = (coins) => {
         {
             id: x[0].charAt(0).toUpperCase() + x[0].slice(1),
             label: x[0].charAt(0).toUpperCase() + x[0].slice(1),
-            value: ((x[1]/total).toFixed(2))*100,
+            value: ((x[1]/total)*100).toFixed(1),
             color: colors[i]
 
         }

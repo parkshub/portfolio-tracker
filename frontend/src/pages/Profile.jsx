@@ -29,18 +29,8 @@ import { Grid, Paper, Container} from '@mui/material'
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
+import { getCoin } from '../features/coin/coinSlice';
 
-///////////////////////////////
-// I THINK I KNOW THE SOLUTION 04.11.23
-//////////////////////////////
-// MAKE THE FUNCTION RETURN '' OR [] OR {} OR WHATEVER IT USUALLY RETURNS BUT EMPTY
-// AND MAKE THE GRAPH PART IN REACT ONLY RENDER USING A CONDITIONAL LIKE VAR!=='' && RENDER
-
-
-// MAIN ISSUE RIGHT NOW IS THAT GENERATELINEDATA IS BEING RUN WHEN ALL THE DATA ISN'T COMPLETELY LOADED RESULTING IN ERRORS DURING THE FUNCTION CALL, PUT THE PART THAT NEEDS TO BE RUN HERE IN USEFFECT, BUT STILL NOT WORKING MIGHT NEED TO CREATE AN ASYNC THUNK FOR IT
-
-//!!! I HAVE AN IDEA...MAYBE USE EXAMPLE LINE DATA AS PLACEHOLDER
-//!!! OR! DONT SHOW LINE GRAPH UNTIL LINEGRAPH STATE IS NOT EQUAL TO ''
 
 const Profile = () => {
 
@@ -55,8 +45,6 @@ const Profile = () => {
 ////////////////////////////////////////////////////////////////////
         
     const [value, setValue] = useState('daily');
-    // const [chartData, setChartData] = useState(lineGraph.value)
-
     const [filteredCoinState, setFilteredCoinState] = useState(coins)
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -82,75 +70,88 @@ const Profile = () => {
         setPage(0);
     }
 
+    const lineDataFunc = async() => {
+        const uniqueCoinsUser = [...new Set(coins.map(coin => coin.coinId))]
+        const cache = {}
+
+        Object.entries(localStorage).forEach((x) => {
+            if (uniqueCoinsUser.includes(x[0])) { 
+                cache[x[0]]=JSON.parse(x[1]) 
+            }
+        })
+
+        const missing = []
+        const today = new Date().getTime()
+
+        uniqueCoinsUser.forEach((x) => {
+
+            if(!Object.keys(cache).includes(x) || today - cache[x]['time'] > 86400000) {
+                missing.push(x)
+            }
+        })
+        console.log('these are missing', missing)
+
+        if (missing.length > 0) {
+            for (let i of missing) {
+                await dispatch(getCoin(i))
+                console.log('these are missing', i)
+                console.log(localStorage.getItem(i))
+                cache[i] = JSON.parse(localStorage.getItem(i))
+            }
+        }
+
+        // getting new values for missing coins need to happen here
+        
+
+        
+
+        const lineData = generateLineData(cache, uniqueCoinsUser, coins)
+        setLineGraph(lineData)
+    }
+
     useEffect(() => {
         dispatch(getTx())
     },[dispatch])
 
     useEffect(() => {
-        console.log('useeffect ran and coins values is ', coins)
+        console.log('useeffect ran and coins values is ', coins.length)
         setFilteredCoinState(coins)
-
-        ////////////////////////////////
-        ////////////////////////////////
-        // const uniqueCoinsUser = [...new Set(coins.map(coin => coin.coinId))]
-        // const cache = {}
-
-        // Object.entries(localStorage).forEach((x) => {
-        //     if (uniqueCoinsUser.includes(x[0])) { 
-        //         cache[x[0]]=JSON.parse(x[1]) 
-        //     }
-        // })
-
-        // const missing = []
-        // const today = new Date().getTime
-
-        // uniqueCoinsUser.forEach((x) => {
-
-        //     if(!Object.keys(cache).includes(x) || today - cache[x]['time'] > 86400000) {
-        //         missing.push(x)
-        //     }
-        // })
-
         
-        // console.log('this is it ',cache, missing, uniqueCoinsUser, coins)
-        
-        // // const {yearlyLineData, monthlyLineData, dailyLineData} = generateLineData(cache, missing, uniqueCoinsUser, coins)
-        // // setLineGraph({'yearly': yearlyLineData, 'monthly': monthlyLineData, 'daily': dailyLineData})
+        lineDataFunc()
 
-        
-        ////////////////////////////////
-        ////////////////////////////////
-        // console.log(coins)
-
-    }, [coins]) // by doing this you are saying when coins changes, call this
+    }, [coins]) 
 
     return (
-        // there should also be graphs and data here
+
         <Box>
             {/* <TextField onChange={handleChangetest}></TextField> */}
             <Grid item container height={350} xs={12}>
                 <ExamplePie data={pieData}></ExamplePie>
             </Grid>
 
-            {/* <Grid item container height={350} xs={12}>
-                <ExampleLine data={lineGraph[value]} />
-            </Grid>
+            { lineGraph !== '' &&
+            <>
+                <Grid item container height={350} xs={12}>
+                    <ExampleLine data={lineGraph[value]} />
+                </Grid>
 
-            <Grid item xs={12}>
-                <Box sx={{ width: '100%' }} display="flex" justifyContent="center">
-                    <Tabs
-                        value={value}
-                        onChange={ handleChange }
-                        textColor="primary"
-                        indicatorColor="primary"
-                        aria-label="secondary tabs example"
-                    >
-                        <Tab value="daily" label="daily" sx={{ fontSize: 10 }}/>
-                        <Tab value="monthly" label="monthly" sx={{ fontSize: 10 }}/>
-                        <Tab value="yearly" label="yearly" sx={{ fontSize: 10 }}/>
-                    </Tabs>
-                </Box>                    
-            </Grid> */}
+                <Grid item xs={12}>
+                    <Box sx={{ width: '100%' }} display="flex" justifyContent="center">
+                        <Tabs
+                            value={value}
+                            onChange={ handleChange }
+                            textColor="primary"
+                            indicatorColor="primary"
+                            aria-label="secondary tabs example"
+                        >
+                            <Tab value="daily" label="daily" sx={{ fontSize: 10 }}/>
+                            <Tab value="monthly" label="monthly" sx={{ fontSize: 10 }}/>
+                            <Tab value="yearly" label="yearly" sx={{ fontSize: 10 }}/>
+                        </Tabs>
+                    </Box>                    
+                </Grid>
+            </>
+            }
 
 
             <TextField onChange={handleSearchChange}></TextField>

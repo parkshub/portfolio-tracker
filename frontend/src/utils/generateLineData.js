@@ -1,23 +1,18 @@
-exports.generateLineData = (cache, missing, uniqueCoinsUser, coins) => {
+exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
+
+    if (coins.length == 0) { return '' }
 
     // later change hardcoded bitcoin to uniqueCoinsUser[0]
     
-    // console.log('function got', cache, missing, uniqueCoinsUser, coins)
+    console.log('function got', cache, uniqueCoinsUser, coins)
 
     let transactionsRaw = []
     coins.forEach(x => transactionsRaw.push({[x.date]: {'amount': x.amount, 'price': x.price, 'total': x.total, 'coin': x.coinId, 'type': x.type}}))
 
     transactionsRaw = transactionsRaw.sort((a,b) => Object.keys(a) - Object.keys(b))
 
-    console.log('this is transactionsRaw ', transactionsRaw)
+    // console.log('this is transactionsRaw ', transactionsRaw)
 
-    //////////////////////////////////////
-    //////////////////////////////////////
-    // if you want to implement sell...when making transactions = [], just make the number negative if the transaction is a sell
-    
-    // BUT ALSO IT MIGHT BE A GOOD IDEA TO FIRST LIMIT SELL BUTTON SO THAT YOU CAN'T SELL MORE THAN YOU HAVE
-
-    //////////////////////////////////////
     const transactions = []
     
     transactionsRaw.forEach((x, i) => {
@@ -37,11 +32,14 @@ exports.generateLineData = (cache, missing, uniqueCoinsUser, coins) => {
 
     const datesPriceCoin = {}
     uniqueCoinsUser.forEach(x => {
-        datesPriceCoin[x] = {'years': cache.bitcoin.coin.yearlyRaw.reverse().filter((x, i) => i%16 === 0), 'months': cache.bitcoin.coin.yearlyRaw.reverse().slice(0,92).filter((x, i) => i%4 === 0)};
+        datesPriceCoin[x] = {'years': cache[x].coin.yearlyRaw.reverse().filter((x, i) => i%16 === 0), 'months': cache[x].coin.yearlyRaw.reverse().slice(0,92).filter((x, i) => i%4 === 0)};
     })
 
+    console.log(cache['bitcoin'].coin.yearlyRaw.reverse().slice(0,92).filter((x, i) => i%4 ))
+    
+
     const netProfit = {}
-    console.log('this is dates price coin', datesPriceCoin)
+    // console.log('this is dates price coin', datesPriceCoin)
     // datespricecoin has price of all coins for each monthly and yearly
     uniqueCoinsUser.forEach(coin => {
 
@@ -58,7 +56,7 @@ exports.generateLineData = (cache, missing, uniqueCoinsUser, coins) => {
             netProfit[coin]['years'].push({'x': date, 'y': profit})
         })
 
-        datesPriceCoin[coin]['months'].forEach((monthDay) => {
+        datesPriceCoin[coin]['months'].forEach((monthDay, i) => {
             if (!netProfit[coin] || !netProfit[coin]['months']) { 
                 netProfit[coin]['months'] = []
                 
@@ -69,17 +67,20 @@ exports.generateLineData = (cache, missing, uniqueCoinsUser, coins) => {
             let profit = lastTx.length ? Number((monthDay[1] * lastTx[1]).toFixed(2)) : 0
             let date = String(new Date(monthDay[0])).split(' ').slice(1, 4).join(' ')
             
-            netProfit[coin]['months'].push({'x': date, 'y': profit})
+            netProfit[coin]['months'].push({'x': `${i} ${date}`, 'y': profit})
+            // netProfit[coin]['months'].push({'x': date, 'y': profit})
         })
     })
 
-    console.log('this is netprofit ', netProfit)
+    console.log('this is datepricecoin' ,datesPriceCoin)
+
     //netProfit has how much profit for each coin monthly and yearly
 
     const yearProfit = {}
 
     uniqueCoinsUser.forEach(coin => {
         netProfit[coin]['years'].forEach(dayPrice => {
+            // console.log('this is payprice ', dayPrice)
             if (!yearProfit[dayPrice.x]) { yearProfit[dayPrice.x] = dayPrice.y}
             else { yearProfit[dayPrice.x] += dayPrice.y }
         })
@@ -89,23 +90,27 @@ exports.generateLineData = (cache, missing, uniqueCoinsUser, coins) => {
 
     uniqueCoinsUser.forEach(coin => {
         netProfit[coin]['months'].forEach(dayPrice => {
+            // console.log('this', dayPrice)
             if (!monthProfit[dayPrice.x]) { monthProfit[dayPrice.x] = dayPrice.y}
             else { monthProfit[dayPrice.x] += dayPrice.y }
         })
     })
 
+    console.log('netprofit ', netProfit['bitcoin']['months'], netProfit['ethereum']['months'])
+
+    // console.log('this is monthprfot', monthProfit)
+
     const yearlyData = Object.entries(yearProfit).map(data => {
         return {x: data[0], y: Number(data[1].toFixed(2))}
     })
 
+
+
     const monthlyData = Object.entries(monthProfit).map(data => {
+        // console.log('this', data)
         return {x: data[0], y: Number(data[1].toFixed(2))}
     })
 
-    // yearlyData and monthlyData is line graph data
-
-    // for each coin get how many total you have and how much total you spent
-    console.log('this is transactions ', transactions)
     const totals = {}
     transactions.forEach(tx => {
         if (!totals[tx[3]]) { totals[tx[3]] = {'amount': tx[1], 'spent': tx[2]} }
@@ -115,16 +120,13 @@ exports.generateLineData = (cache, missing, uniqueCoinsUser, coins) => {
         }
     })
 
-    // loop the bitcion part with coin names
-    // console.log('this is totals ',totals.bitcoin.amount)
-    
     const dailyProfitRaw = {}
-    uniqueCoinsUser.forEach(coin => {
-        cache[coin].coin.dailyChart[0].data.forEach(data => {
-            if (!dailyProfitRaw[coin]) {
-                dailyProfitRaw[coin] = []
+    uniqueCoinsUser.forEach(coinName => {
+        cache[coinName].coin.dailyChart[0].data.forEach(data => {
+            if (!dailyProfitRaw[coinName]) {
+                dailyProfitRaw[coinName] = []
             }
-            dailyProfitRaw[coin].push(data.y * totals[coin].amount)
+            dailyProfitRaw[coinName].push(data.y * totals[coinName].amount)
         })
     })
 
@@ -138,11 +140,12 @@ exports.generateLineData = (cache, missing, uniqueCoinsUser, coins) => {
                 dailyProfit[j] += profit
             }
         })
-        console.log('hello ', coinProfit)
+        // console.log('hello ', coinProfit)
     })
 
+    
 
-    const dailyData = cache.bitcoin.coin.dailyChart[0].data.map((day, i) => {
+    const dailyData = cache[uniqueCoinsUser[0]].coin.dailyChart[0].data.map((day, i) => {
         return {'x': day.x, 'y': Number(dailyProfit[i].toFixed(2))}
     })
     
@@ -164,5 +167,5 @@ exports.generateLineData = (cache, missing, uniqueCoinsUser, coins) => {
         "data": dailyData
     }]
 
-    return {yearlyLineData, monthlyLineData, dailyLineData}
+    return {'yearly': yearlyLineData, 'monthly': monthlyLineData, 'daily': dailyLineData}
 }

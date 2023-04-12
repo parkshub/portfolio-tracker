@@ -1,4 +1,4 @@
-let arr1 = {1: 2, 3:4}
+let a = {'b':1, 'a':2, 'c':3}
 
 
-console.log(Object.entries(arr1))
+console.log(a)
