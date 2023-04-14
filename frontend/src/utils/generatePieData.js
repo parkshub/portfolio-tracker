@@ -1,4 +1,7 @@
 exports.generatePieData = (coins) => {
+
+    if (coins.length === 0) { return '' }
+
     function generateHslaColors (saturation, lightness, alpha, amount) {
         // https://mika-s.github.io/javascript/colors/hsl/2017/12/05/generating-random-colors-in-javascript.html
         let colors = []

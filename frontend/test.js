@@ -1,3 +1,6 @@
+const { generateLineData } = require('../frontend/src/utils/generateLineData')
+
+const uniqueCoinsUser = ['bitcoin', 'ethereum']
 
 let bitcoin = {
     "time": 1680220800000,
@@ -13383,62 +13386,7 @@ let coins = [
     }
 ] // these are transactions
 
-let coinsSorted = coins.sort((a, b) => a.date - b.date)
 
-console.log(window.localStorage.getItem('user'))
+const lineData = generateLineData(cache, uniqueCoinsUser, coins)
 
-// because im storing a lot in localstorage would have to do something different for the first step
-
-// [{ this is how data should look like
-//     "id": "japan",
-//     "color": "hsl(68, 70%, 50%)",
-//     "data": [
-//       {
-//         "x": "plane",
-//         "y": 211
-//       },
-//       {
-
-//       }
-// ]
-
-
-// STEP 1
-// check all coins in localstorage // this is in profile.jsx
-// check all coins in user tx
-// and find coins not in localstorage or ones that are outdated by more than a day 
-// put them in array
-
-// get the missing coins and get price info
-
-// then they should be properly stored in localstorage
-
-// cache should contain all the information for each coin {coin1: {time: time, coin: {info, daily, etc.}}, coin2...}
-
-
-// ** think of it like this you're displaying portfolio value for each date here
-// STEP 2 - coins has all transactions
-// make an object daily = {bitcoin, eth,...}, monthly, yearly
-// for each day there is a transaction record how much spent and amount of coin!!!! ALSO DONT FORGET ABOUT ORDER TYPE IF IT'S A SELL YOU NEED TO TAKE THAT AWAY FROM PREVIOUS TOTAL
-// ** above part is important!!
-
-
-// for daily just split the price info into 22 or 24 doesn't matter
-// then record the price of each coin for those 22 or 24 periods
-// for each period for each tx of that coin sum the total amount spent and get how much coins he has
-// then compare and see is portfolios net worth
-
-// STEP 3
-// for monthly and yearly
-// record the price for each period for each coin
-// calculate portfolio net worth only for coins that were purchased before that date...
-
-// STEP 4
-// calculate net profit/loss
-// just get total amount spent and amount bought and compare that with total amount bought * price now for each coin
-// this is to display at very top
-
-
-
-console.log(new Date(1680249626831))
-console.log(new Date(1680249749000))
+console.log(lineData)

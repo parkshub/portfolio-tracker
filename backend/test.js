@@ -1,4 +1,8 @@
-let a = {'b':1, 'a':2, 'c':3}
+let a = 1673913600000
 
 
-console.log(a)
+console.log(new Date(1681430400000).toDateString())
+
+// let a = [1,2]
+
+// console.log(a == [1,2])

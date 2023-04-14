@@ -191,6 +191,25 @@ exports.txCoin = async(req, res) => {
     console.log('tx controller received ', req.body)
     const userId = req.user.id
     const { coinId, coinSymbol, coinImage, amount, price, date, type, total } = req.body
+
+    if (type === 'sell') {
+        let tx = await UserModel.findById(userId).populate('transactions')
+        tx = tx.transactions.filter((x) => x.coinId == coinId && x.date <= date)
+        let totalAmount = 0
+        tx.forEach(x => {
+            if (x.type == 'buy') {
+                return totalAmount += x.amount
+            } else { return totalAmount -= x.amount }
+        })
+        console.log(totalAmount)
+        console.log(totalAmount)
+
+        if (totalAmount < amount) {
+            return res.status(401).send(`Total amount in portfolio on ${new Date(date).toDateString()} is less than sell amount.`)
+        }
+    }
+
+
     
     const coin = await CoinModel.create({
         userId: userId,
@@ -200,7 +219,8 @@ exports.txCoin = async(req, res) => {
         amount,
         price,
         date,
-        type,
+        type: type === 'buy' ? 'buy' : 'sell',
+        // type,
         total
     })
     

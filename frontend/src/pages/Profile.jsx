@@ -30,6 +30,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 import { getCoin } from '../features/coin/coinSlice';
+import { lineData } from '../utils/data';
 
 
 const Profile = () => {
@@ -89,13 +90,13 @@ const Profile = () => {
                 missing.push(x)
             }
         })
-        console.log('these are missing', missing)
+        // console.log('these are missing', missing)
 
         if (missing.length > 0) {
             for (let i of missing) {
                 await dispatch(getCoin(i))
-                console.log('these are missing', i)
-                console.log(localStorage.getItem(i))
+                // console.log('these are missing', i)
+                // console.log(localStorage.getItem(i))
                 cache[i] = JSON.parse(localStorage.getItem(i))
             }
         }
@@ -114,7 +115,7 @@ const Profile = () => {
     },[dispatch])
 
     useEffect(() => {
-        console.log('useeffect ran and coins values is ', coins.length)
+        // console.log('useeffect ran and coins values is ', coins.length)
         setFilteredCoinState(coins)
         
         lineDataFunc()
@@ -125,17 +126,24 @@ const Profile = () => {
 
         <Box>
             {/* <TextField onChange={handleChangetest}></TextField> */}
-            <Grid item container height={350} xs={12}>
-                <ExamplePie data={pieData}></ExamplePie>
-            </Grid>
 
-            { lineGraph !== '' &&
-            <>
-                <Grid item container height={350} xs={12}>
-                    <ExampleLine data={lineGraph[value]} />
+            <Grid container>
+
+                <Grid item container xs={12}>
+                    {JSON.stringify(lineGraph.overview)}
                 </Grid>
 
-                <Grid item xs={12}>
+                { pieData !== '' &&
+                <Grid item container height={350} xs={12} sm={6}>
+                    <ExamplePie data={pieData}></ExamplePie>
+                </Grid>
+                }
+
+                { lineGraph !== '' &&
+                <>
+                <Grid item container height={350} xs={12} sm={6}>
+                    <ExampleLine data={lineGraph[value]} />
+                    <Grid item xs={12}>
                     <Box sx={{ width: '100%' }} display="flex" justifyContent="center">
                         <Tabs
                             value={value}
@@ -150,8 +158,26 @@ const Profile = () => {
                         </Tabs>
                     </Box>                    
                 </Grid>
-            </>
-            }
+                </Grid>
+
+                {/* <Grid item xs={12} sm={6}>
+                    <Box sx={{ width: '100%' }} display="flex" justifyContent="center">
+                        <Tabs
+                            value={value}
+                            onChange={ handleChange }
+                            textColor="primary"
+                            indicatorColor="primary"
+                            aria-label="secondary tabs example"
+                        >
+                            <Tab value="daily" label="daily" sx={{ fontSize: 10 }}/>
+                            <Tab value="monthly" label="monthly" sx={{ fontSize: 10 }}/>
+                            <Tab value="yearly" label="yearly" sx={{ fontSize: 10 }}/>
+                        </Tabs>
+                    </Box>                    
+                </Grid> */}
+                </>
+                }
+            </Grid>
 
 
             <TextField onChange={handleSearchChange}></TextField>
