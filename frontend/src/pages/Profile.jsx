@@ -31,9 +31,10 @@ import Tab from '@mui/material/Tab';
 
 import { getCoin } from '../features/coin/coinSlice';
 import { lineData } from '../utils/data';
-
+import { tableCellClasses } from "@mui/material/TableCell";
 
 const Profile = () => {
+
 
     const dispatch = useDispatch()
 
@@ -124,14 +125,64 @@ const Profile = () => {
 
     return (
 
-        <Box>
-            {/* <TextField onChange={handleChangetest}></TextField> */}
+        <Container maxWidth="xl">
+            <Grid container sx={{marginBottom: 4, marginTop: 4}} justifyContent='center'>
+                <Table
+                    sx={{
+                        [`& .${tableCellClasses.root}`]: {
+                            borderBottom: "none"
+                        },
+                        width: 500
+                    }}
+                >
+                    <TableHead>
+                        <TableRow>
+                            <TableCell style={{ verticalAlign: 'top'}}>
+                                Profit
+                            </TableCell>
+                            <TableCell style={{ verticalAlign: 'top' }}>
+                                %Profit
+                            </TableCell>
+                            <TableCell style={{ verticalAlign: 'top' }}>
+                                Allocation
+                            </TableCell>
+                            <TableCell style={{ verticalAlign: 'top' }}>
+                                Current Value
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow>
+                            {lineGraph && lineGraph.overview.profit !== undefined && 
+                            <>
+                            <TableCell style={{ verticalAlign: 'bottom' }}>
+                                <Typography variant='p' color={lineGraph.overview.profit < 0 ? 'secondary' : 'primary'}>
+                                    {lineGraph.overview.profit < 0 ? '-' : '+'}${lineGraph.overview.profit.toLocaleString()} 
+                                </Typography>
+                            </TableCell>
+                            <TableCell>
+                                <Typography variant='p' color={lineGraph.overview.profit < 0 ? 'secondary' : 'primary'}>
+                                    {lineGraph.overview.profit < 0 ? '-' : '+'}{lineGraph.overview.profitPercent}
+                                </Typography>                        
+                            </TableCell>
+                            <TableCell>
+                                <Typography variant='p' color={lineGraph.overview.profit < 0 ? 'secondary' : 'primary'}>
+                                    ${lineGraph.overview.allocated.toLocaleString()}
+                                </Typography>                        
+                            </TableCell>
+                            <TableCell> 
+                                <Typography variant='p' color={lineGraph.overview.profit < 0 ? 'secondary' : 'primary'}>
+                                    ${lineGraph.overview.currentValue.toLocaleString()}
+                                </Typography>
+                            </TableCell>
+                            </>
+                            }
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </Grid>
 
-            <Grid container>
-
-                <Grid item container xs={12}>
-                    {JSON.stringify(lineGraph.overview)}
-                </Grid>
+            <Grid container sx={{marginBottom: 10}}>
 
                 { pieData !== '' &&
                 <Grid item container height={350} xs={12} sm={6}>
@@ -144,43 +195,27 @@ const Profile = () => {
                 <Grid item container height={350} xs={12} sm={6}>
                     <ExampleLine data={lineGraph[value]} />
                     <Grid item xs={12}>
-                    <Box sx={{ width: '100%' }} display="flex" justifyContent="center">
-                        <Tabs
-                            value={value}
-                            onChange={ handleChange }
-                            textColor="primary"
-                            indicatorColor="primary"
-                            aria-label="secondary tabs example"
-                        >
-                            <Tab value="daily" label="daily" sx={{ fontSize: 10 }}/>
-                            <Tab value="monthly" label="monthly" sx={{ fontSize: 10 }}/>
-                            <Tab value="yearly" label="yearly" sx={{ fontSize: 10 }}/>
-                        </Tabs>
-                    </Box>                    
+                        <Box sx={{ width: '100%' }} display="flex" justifyContent="center">
+                            <Tabs
+                                value={value}
+                                onChange={ handleChange }
+                                textColor="primary"
+                                indicatorColor="primary"
+                                aria-label="secondary tabs example"
+                            >
+                                <Tab value="daily" label="daily" sx={{ fontSize: 10 }}/>
+                                <Tab value="monthly" label="monthly" sx={{ fontSize: 10 }}/>
+                                <Tab value="yearly" label="yearly" sx={{ fontSize: 10 }}/>
+                            </Tabs>
+                        </Box>                    
+                    </Grid>
                 </Grid>
-                </Grid>
-
-                {/* <Grid item xs={12} sm={6}>
-                    <Box sx={{ width: '100%' }} display="flex" justifyContent="center">
-                        <Tabs
-                            value={value}
-                            onChange={ handleChange }
-                            textColor="primary"
-                            indicatorColor="primary"
-                            aria-label="secondary tabs example"
-                        >
-                            <Tab value="daily" label="daily" sx={{ fontSize: 10 }}/>
-                            <Tab value="monthly" label="monthly" sx={{ fontSize: 10 }}/>
-                            <Tab value="yearly" label="yearly" sx={{ fontSize: 10 }}/>
-                        </Tabs>
-                    </Box>                    
-                </Grid> */}
                 </>
                 }
             </Grid>
+            
+            <TextField label='Search' variant='standard' onChange={handleSearchChange}></TextField>
 
-
-            <TextField onChange={handleSearchChange}></TextField>
             <TableContainer>
                 <Table>
                     <TableHead>
@@ -233,7 +268,7 @@ const Profile = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </Box>
+        </Container>
     )
 }
 

@@ -1,8 +1,6 @@
-let a = 1673913600000
+const dayjs = require('dayjs')
+const tomorrow = dayjs()
 
+const test = new Date(1682274181000).getDay()
 
-console.log(new Date(1681430400000).toDateString())
-
-// let a = [1,2]
-
-// console.log(a == [1,2])
+console.log(test)

@@ -21,10 +21,16 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 
 import { txCoin } from '../features/coin/coinSlice';
+import { toast } from 'react-toastify'
+import dayjs from 'dayjs';
+
 
 // when you want to show users tx history with certain coin, just populate the users tx array in the controller
 
 export default function BuySell({transaction, yearlyData, coinInfo}) {
+
+  const min = dayjs().set('date', 3).set('month', 0).set('year', 2009)
+  const max = dayjs()
 
   const type = transaction === "buy" ? "Buy" : "Sell"
 
@@ -59,14 +65,29 @@ export default function BuySell({transaction, yearlyData, coinInfo}) {
 
       let UTCDate = new Date(dateString).getTime()
       setDate(UTCDate)
+
+
+      let minDate = new Date()
+      minDate.setFullYear(minDate.getFullYear() - 1)
+      minDate.setDate(minDate.getDate() - 2);
+      
+      const minDateString = new Date(minDate).toDateString().split(' ').slice(1,4).join(' ')
+      
+      if (UTCDate < minDate) {
+        toast.warn(`Manual input needed for dates ${minDateString} and before.`)
+      }
       
       if (!manualInput) {
+        
+        let tempPrice = yearlyData.filter(x => x.includes(UTCDate))
+        
 
-        let tempPrice = yearlyData.filter(x => x.includes(UTCDate))[0][1]
+        let price = tempPrice.length > 0 ? yearlyData.filter(x => x.includes(UTCDate))[0][1] : coinInfo.market_data.current_price.usd
+        // console.log('this is price', coinInfo.market_data)
 
         setFormData((prev) => ({
           ...prev,
-          price: tempPrice.toFixed(2),
+          price: price.toFixed(2),
         }))      
       }
 
@@ -101,7 +122,7 @@ export default function BuySell({transaction, yearlyData, coinInfo}) {
   }
 
   useEffect(() => {
-    setTotal(formData.amount * formData.price)
+    setTotal(Number((formData.amount * formData.price).toFixed(2)))
   }, [formData])
 
 
@@ -130,7 +151,7 @@ export default function BuySell({transaction, yearlyData, coinInfo}) {
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker onChange={handleChangeDate} sx={{width: "100%"}}/>
+                    <DatePicker onChange={handleChangeDate} sx={{width: "100%"}} disableFuture maxDate={max} minDate={min}/>
                   </LocalizationProvider>
                 </Grid>
 

@@ -7,51 +7,66 @@ import { useDispatch } from 'react-redux';
 
 import { deleteTx } from '../features/coin/coinSlice';
 import { Link } from 'react-router-dom';
+import { border } from '@mui/system';
+import {Typography} from '@mui/material';
 
 const TxCell = ({coin}) => {
 
     const dispatch = useDispatch()
 
     const onClickDelete = (e) => {
+        // e.stopPropogation()
         dispatch(deleteTx(coin._id))
     }
 
     return (
-        <TableRow>
+        <TableRow component={Link} to={`/coins/${coin.coinId}`} style={{textDecoration: 'none'}} hover='true'>
+        {/* <TableRow> */}
             <TableCell>
-                {(new Date(coin.date)).toDateString()}
+                <Typography>
+                    {(new Date(coin.date)).toDateString()}
+                </Typography>
             </TableCell>
             <TableCell>
                 <img src={coin.coinImage} alt="" />
             </TableCell>
             <TableCell>
-                <Link to={`/coins/${coin.coinId}`}>
-                { coin.coinId
-                    .replace(/-/g, ' ')
-                    .split(' ')
-                    .map(x => {
-                        return (
-                            x.charAt(0).toUpperCase() + x.slice(1)
-                        )
-                    })
-                    .join(' ') 
-                } 
-                {': ' + coin.coinSymbol.toUpperCase() }
-                </Link>
+                <Typography>
+                    { coin.coinId
+                        .replace(/-/g, ' ')
+                        .split(' ')
+                        .map(x => {
+                            return (
+                                x.charAt(0).toUpperCase() + x.slice(1)
+                            )
+                        })
+                        .join(' ') 
+                    } 
+                    {': ' + coin.coinSymbol.toUpperCase() }
+                </Typography>
+            </TableCell>
+
+            <TableCell>
+                <Typography>
+                    {coin.type}
+                </Typography>
             </TableCell>
             <TableCell>
-                {coin.type}
+                <Typography>
+                    ${coin.price}
+                </Typography>
             </TableCell>
             <TableCell>
-                ${coin.price}
+                <Typography>
+                    {coin.amount}
+                </Typography>
             </TableCell>
             <TableCell>
-                {coin.amount}
+                <Typography>
+                    ${coin.total}
+                </Typography>
             </TableCell>
-            <TableCell>
-                ${coin.total}
-            </TableCell>
-            <TableCell>
+            <TableCell component={Link}>
                 <Button onClick={onClickDelete}>Delete</Button>
             </TableCell>
         </TableRow>

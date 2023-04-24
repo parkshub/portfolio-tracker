@@ -9,6 +9,8 @@ import TableRow from '@mui/material/TableRow';
 
 import { Link } from 'react-router-dom';
 
+import { Typography } from '@mui/material';
+
 const BrowseCoinCell = ({coin}) => {
 
     const top3List = ['bitcoin', 'ethereum']
@@ -20,29 +22,39 @@ const BrowseCoinCell = ({coin}) => {
 
     return (
         // <TableRow component={Link} to={`/coins/${coin.id}`}>
-        <TableRow component={Link} to={`/coins/${coinLink}`}>
+        <TableRow component={Link} to={`/coins/${coinLink}`} style={{textDecoration: 'none'}} hover='true'>
+        {/* // <TableRow hover='true'> */}
             <TableCell>
                 <img src={coin.image} alt="" width="50px"/>
             </TableCell>
             <TableCell>
-                { coin.id
-                    .replace(/-/g, ' ')
-                    .split(' ')
-                    .map(x => {
-                        return (
-                            x.charAt(0).toUpperCase() + x.slice(1)
-                        )
-                    })
-                        .join(' ') }: { coin.symbol.toUpperCase() }
+                <Typography>
+                    { coin.id
+                        .replace(/-/g, ' ')
+                        .split(' ')
+                        .map(x => {
+                            return (
+                                x.charAt(0).toUpperCase() + x.slice(1)
+                            )
+                        })
+                            .join(' ') }: { coin.symbol.toUpperCase() 
+                    }
+                </Typography>
             </TableCell>
             <TableCell>
-                ${ coin.market_cap.toLocaleString("en-US") }                              
+                <Typography>
+                    ${ coin.market_cap.toLocaleString("en-US") }                              
+                </Typography>
             </TableCell>
             <TableCell>
-                $ {coin.current_price.toLocaleString("en-US") }
+                <Typography>
+                    ${ coin.current_price.toLocaleString("en-US") }
+                </Typography>
             </TableCell>
             <TableCell>
-                { coin.price_change_percentage_24h.toFixed(2) }%
+                <Typography color={String(coin.price_change_percentage_24h).startsWith('-') ? 'secondary' : 'primary'}>
+                    { coin.price_change_percentage_24h.toFixed(2) }%
+                </Typography>
             </TableCell>
         </TableRow>
         // </Link>

@@ -48,9 +48,22 @@ const Coins = () => {
     // uncomment this later
     const [chartData, setChartData] = useState(coin.dailyChart) 
 
+    const [page, setPage] = useState(0)
+    const [rowsPerPage, setRowsPerPage] = useState(5)
+
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    }
 
     useEffect(() => {
         dispatch(getCoin(id))
@@ -73,43 +86,47 @@ const Coins = () => {
 
     return (
         <Container maxWidth="xl">
-            {/* get rid of these two below */}
-            {/* <BuySell transaction={"buy"} yearlyData={coin.yearlyRaw} coinInfo={coin.info}></BuySell>
-            <BuySell transaction={"sell"} yearlyData={coin.yearlyRaw} coinInfo={coin.info}></BuySell> */}
-            <Grid container>
+            <Grid container sx={{m: 4}}>
                 { coin !== '' &&
                     <Grid item container xs={12}>
                         <Grid item xs={12} md={6} textAlign="center" height={400}>
-                            <div>Name: {coin.info.name}</div>
-                            <div>Symbol: {coin.info.symbol.toUpperCase()}</div>
-                            <img src={coin.info.image.large} alt="" />
-                            <div>Price: ${coin.info.market_data.current_price.usd}</div>
-                            <div>Percent Price Change 24hr: {coin.info.market_data.price_change_percentage_24h}%</div>
-                            <div>Market Cap Rank: {coin.info.market_cap_rank}</div>
-                            <BuySell transaction={"buy"} yearlyData={coin.yearlyRaw} coinInfo={coin.info}></BuySell>
-                            <BuySell transaction={"sell"} yearlyData={coin.yearlyRaw} coinInfo={coin.info}></BuySell>
-                        </Grid>
-                        <Grid item container xs={12} sm={6} height={400} direction="row">
-                        
-                        <Grid item container height={350} xs={12}>
-                            <ExampleLine data={chartData} />
+                            <img src={coin.info.image.large} height={200} alt="" />
+                            <Typography variant='h6'>{coin.info.name}: {coin.info.symbol.toUpperCase()}</Typography>
+                            <Typography variant='h6'>Rank: {coin.info.market_cap_rank}</Typography>
+                            <Typography variant='h6'>${coin.info.market_data.current_price.usd}</Typography>
+                            <Typography variant='h6'>Daily % Change: 
+                                <Typography variant="span"color={String(coin.info.market_data.price_change_percentage_24h).startsWith('-') ? 'secondary' : 'primary'}> {coin.info.market_data.price_change_percentage_24h.toFixed(2)}%
+                                </Typography>
+                            </Typography>
+
+                            <Grid item container justifyContent='center'>
+                                <BuySell transaction={"buy"} yearlyData={coin.yearlyRaw} coinInfo={coin.info}></BuySell>
+                                <BuySell transaction={"sell"} yearlyData={coin.yearlyRaw} coinInfo={coin.info}></BuySell>
+                            </Grid>
                         </Grid>
 
-                        <Grid item xs={12}>
-                            <Box sx={{ width: '100%' }} display="flex" justifyContent="center">
-                                <Tabs
-                                    value={value}
-                                    onChange={ handleChange }
-                                    textColor="primary"
-                                    indicatorColor="primary"
-                                    aria-label="secondary tabs example"
-                                >
-                                    <Tab value="daily" label="daily" sx={{ fontSize: 10 }}/>
-                                    <Tab value="monthly" label="monthly" sx={{ fontSize: 10 }}/>
-                                    <Tab value="yearly" label="yearly" sx={{ fontSize: 10 }}/>
-                                </Tabs>
-                            </Box>                    
-                        </Grid>
+
+                        <Grid item container xs={12} sm={6} height={400} direction="row">
+                        
+                            <Grid item container height={350} xs={12}>
+                                <ExampleLine data={chartData} />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <Box sx={{ width: '100%' }} display="flex" justifyContent="center">
+                                    <Tabs
+                                        value={value}
+                                        onChange={ handleChange }
+                                        textColor="primary"
+                                        indicatorColor="primary"
+                                        aria-label="secondary tabs example"
+                                    >
+                                        <Tab value="daily" label="daily" sx={{ fontSize: 10 }}/>
+                                        <Tab value="monthly" label="monthly" sx={{ fontSize: 10 }}/>
+                                        <Tab value="yearly" label="yearly" sx={{ fontSize: 10 }}/>
+                                    </Tabs>
+                                </Box>                    
+                            </Grid>
 
                         </Grid>
                     </Grid>
@@ -147,12 +164,23 @@ const Coins = () => {
                     </TableHead>
                     <TableBody>
                         { filteredCoins.length > 0 &&
-                            filteredCoins.map((coin) => {
+                            filteredCoins.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((coin) => {
                                 return (
                                     <TxCell coin={coin}/>
                                 )
                             })
                         }
+                        <TablePagination
+                            showFirstButton={true}
+                            showLastButton={true}
+                            rowsPerPageOptions={[5, 10, 25]}
+                            // component="div"
+                            count={filteredCoins.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />  
                     </TableBody>
                 </Table>
             </TableContainer>

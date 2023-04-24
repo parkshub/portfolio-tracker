@@ -11,6 +11,8 @@ import { getAllCoins } from '../features/coin/coinSlice';
 import { reset } from '../features/coin/coinSlice';
 
 import { useSelector } from 'react-redux';
+import { Grid, Paper, Container} from '@mui/material'
+
 
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -68,8 +70,8 @@ export default function Browse() {
     }, [coins]) // by doing this you are saying when coins changes, call this
 
     return (
-        <Box>
-            <TextField onChange={handleSearchChange}></TextField>
+        <Container sx={{marginTop: 3}} maxWidth="xl">
+            <TextField label='Search' variant='standard' onChange={handleSearchChange}></TextField>
             <TableContainer sx={{ minWidth: 850 }}>
                 <Table>
                     <TableHead>
@@ -113,6 +115,6 @@ export default function Browse() {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </Box>
+        </Container>
     )
 }

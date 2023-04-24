@@ -193,7 +193,7 @@ exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
     })
 
     const profit = ((currentPrices.now - currentPrices.spent) / currentPrices.spent * 100).toFixed(1) + '%'
-    const overview = {profit, 'allocated': currentPrices.spent, 'currentValue': currentPrices.now}
+    const overview = {profit: Number((currentPrices.now - currentPrices.spent).toFixed(2)), profitPercent: profit, 'allocated': Number(currentPrices.spent.toFixed(2)), 'currentValue': Number(currentPrices.now.toFixed(2))}
     console.log('this is overview', overview)
 
     const dailyProfitRaw = {}
@@ -224,7 +224,8 @@ exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
     
 
     const dailyData = cache[uniqueCoinsUser[0]].coin.dailyChart[0].data.map((day, i) => {
-        return {'x': day.x, 'y': Number(dailyProfit[i].toFixed(2))}
+        // return {'x': day.x, 'y': Number(dailyProfit[i].toFixed(2))}
+        return {'x': day.x.split(':').slice(0,2).join(':') + ' GMT', 'y': Number(dailyProfit[i].toFixed(2))}
     })
     
     const yearlyLineData = [{
