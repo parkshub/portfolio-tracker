@@ -1,23 +1,45 @@
-const test = [1,2,3,4]
+const monthlyChart = 
+[{
+    "id": "monthly",
+    "color": "hsl(155, 70%, 50%)",
+    "data": []
+}]
 
-console.log(test.slice(2))
+const monthly = [
+    [ 1674777600000, 23024.74618081709 ],
+    [ 1675123200000, 22840.385858797104 ],
+    [ 1675468800000, 23451.577650774634 ],
+    [ 1675814400000, 23294.9136483527 ],
+    [ 1676160000000, 21889.432080049624 ],
+    [ 1676505600000, 24307.875101631602 ],
+    [ 1676851200000, 24284.478003714703 ],
+    [ 1677196800000, 23951.11098423326 ],
+    [ 1677542400000, 23518.12390627588 ],
+    [ 1677888000000, 22367.43302246967 ],
+    [ 1678233600000, 22217.209884905325 ],
+    [ 1678579200000, 20521.55615175117 ],
+    [ 1678924800000, 24470.88205445031 ],
+    [ 1679270400000, 28186.842652360127 ],
+    [ 1679616000000, 28459.735113552502 ],
+    [ 1679961600000, 27182.299559950465 ],
+    [ 1680307200000, 28516.784729688636 ],
+    [ 1680652800000, 28175.33033421539 ],
+    [ 1680998400000, 27968.12804705512 ],
+    [ 1681344000000, 29904.138694718906 ],
+    [ 1681689600000, 30304.807514785844 ],
+    [ 1682035200000, 28255.57824866478 ],
+    [ 1682380790000, 27510.473297923683 ]
+]
+
+monthly.forEach(x => {
+    const temp = new Date(x[0]).toDateString().split(' ')
+    const year = "'" + String(temp.slice(3)).split('').slice(2).join('')
+    const condensedDate = temp.slice(1,3).join(' ') + ' ' + year
+    monthlyChart[0].data.push({"x": condensedDate, "y": Number(x[1].toFixed(2))})
+}) 
 
 
-netProfit.months.forEach((entry, i) => {
-    let temp = new Date(entry.x).toDateString().split(' ')
-    let year = "'" + String(temp.slice(3)).split('').slice(2).join('')
-    netProfit.months[i].x = temp.slice(1,3).join(' ') + ' ' + year
 
 
-    
-    // netProfit.months[i].x = new Date(entry.x).toDateString().split(' ').slice(1,4).join(' ')
-})
 
-netProfit.months.forEach((entry, i) => {
-    let temp = new Date(entry.x).toDateString().split(' ')
-    // netProfit.years[i].x = new Date(entry.x).toDateString().split(' ').slice(1,4).join(' ')
-    // console.log(temp.slice(3))
-    let year = "'" + String(temp.slice(3)).split('').slice(2).join('')
-    
-    netProfit.years[i].x = temp.slice(1,3).join(' ') + ' ' + year
-})
+console.log(monthlyChart[0].data)

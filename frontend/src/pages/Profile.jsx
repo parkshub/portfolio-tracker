@@ -54,6 +54,8 @@ const Profile = () => {
 
     const pieData = generatePieData(coins)
 
+    console.log('filteredstate is', filteredCoinState)
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -247,7 +249,7 @@ const Profile = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        { filteredCoinState.length > 0 &&
+                        { filteredCoinState.length > 0 && filteredCoinState[0].userId &&
                             filteredCoinState.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((coin) => {
                                 return (
                                     <TxCell key={coin._id} coin={coin}/>

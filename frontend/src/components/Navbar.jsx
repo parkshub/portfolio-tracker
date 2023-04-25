@@ -12,11 +12,13 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import MultilineChartIcon from '@mui/icons-material/MultilineChart';
 
 import SignUp from './SignUp'
 import Login from './Login'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from '@mui/material';
+// import { Link } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 import { logoutUser } from '../features/user/userSlice';
 
@@ -34,7 +36,7 @@ function ResponsiveAppBar() {
 
   // const settings = ['Profile', 'Browse', 'Logout'];
 
-  const settings = user ? ['Profile', 'Browse'] : ['Browse']
+  const settings = user ? ['Main', 'Profile', 'Browse'] : ['Main', 'Browse']
 
 
   const handleOpenUserMenu = (event) => {
@@ -55,7 +57,7 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <MultilineChartIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -71,7 +73,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            Portfolio Tracker
           </Typography>
 
 
@@ -105,8 +107,12 @@ function ResponsiveAppBar() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Link href={`/${setting.toLowerCase()}`} underline ='none' sx={{color:'black'}}>{setting}</Link>
+                  // <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem key={setting} component={Link} to={`/${setting.toLowerCase()}`} onClick={handleCloseUserMenu}>
+                    {/* <Link href={`/${setting.toLowerCase()}`} underline ='none' sx={{color:'black'}}> */}
+                    {/* dont get rid of the above, it works */}
+                      {setting}
+                    {/* </Link> */}
                   </MenuItem>
                 ))}
                 { !user ?

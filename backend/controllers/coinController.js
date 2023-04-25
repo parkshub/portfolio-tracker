@@ -93,34 +93,53 @@ exports.getCoin = async(req, res) => {
 
         let daily = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=1`)).data.prices
         daily = daily.reverse().filter((x, i) => i % 12 === 0).reverse()
+        console.log('this is daily', daily)
         const dailyChart = 
         [{
             "id": "daily",
             "color": "hsl(155, 70%, 50%)",
             "data": []
         }]
-        daily.forEach(x => dailyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(4,6).join(' '), "y": Number(x[1].toFixed(2))}))
+        // daily.forEach(x => dailyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(4,6).join(' '), "y": Number(x[1].toFixed(2))}))
+        daily.forEach(x => dailyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(4,6).join(' ').split(':').slice(0,2).join(':') + ' GMT', "y": Number(x[1].toFixed(2))}))
+
+        
+        
 
         let monthly = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=91`)).data.prices
         monthly = monthly.reverse().filter((x, i) => i % 4 === 0).reverse()
+        console.log('this is monthly', monthly)
         const monthlyChart = 
         [{
             "id": "monthly",
             "color": "hsl(155, 70%, 50%)",
             "data": []
         }]
-        monthly.forEach(x => monthlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))    
+        // monthly.forEach(x => monthlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))
+        monthly.forEach(x => {
+            const temp = new Date(x[0]).toDateString().split(' ')
+            const year = "'" + String(temp.slice(3)).split('').slice(2).join('')
+            const condensedDate = temp.slice(1,3).join(' ') + ' ' + year
+            monthlyChart[0].data.push({"x": condensedDate, "y": Number(x[1].toFixed(2))})
+        }) 
 
         let yearlyRaw = (await axios.get(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=365`)).data.prices
         // console.log(yearly)
         let yearly = yearlyRaw.reverse().filter((x, i) => i % 16 === 0).reverse()
+        console.log('this is yearly', yearly)
         const yearlyChart = 
         [{
             "id": "yearly",
             "color": "hsl(155, 70%, 50%)",
             "data": []
         }]
-        yearly.forEach(x => yearlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))
+        // yearly.forEach(x => yearlyChart[0].data.push({"x": new Date(x[0]).toUTCString().split(' ').slice(1,4).join(' '), "y": Number(x[1].toFixed(2))}))
+        yearly.forEach(x => {
+            const temp = new Date(x[0]).toDateString().split(' ')
+            const year = "'" + String(temp.slice(3)).split('').slice(2).join('')
+            const condensedDate = temp.slice(1,3).join(' ') + ' ' + year
+            yearlyChart[0].data.push({"x": condensedDate, "y": Number(x[1].toFixed(2))})
+        }) 
 
         res.status(201).json({info, dailyChart, monthlyChart, yearlyChart, yearlyRaw})
 
@@ -228,7 +247,7 @@ exports.txCoin = async(req, res) => {
         $push: {transactions: coin.id}
     },{new: true}).populate('transactions')
 
-    const transactions = user.transactions.sort((a,b) => a.date - b.date)
+    const transactions = user.transactions.sort((a,b) => b.date - a.date)
 
     res.json(transactions)
 }
@@ -237,7 +256,7 @@ exports.getTx = async(req, res) => {
     
     const userId = req.user.id 
     const user = await UserModel.findById(userId).populate("transactions")
-    const transactions = user.transactions.sort((a,b) => a.date - b.date)
+    const transactions = user.transactions.sort((a,b) => b.date - a.date)
     // const sortedTransactions = transactions.sort((a,b) => a.date - b.date)
     res.json(transactions)
 }
@@ -260,5 +279,9 @@ exports.deleteTx = async(req, res) => {
 
     const user = await UserModel.findById(userId).populate('transactions')
 
-    res.json(user.transactions)
+    // const transactions = user.transactions.sort((a,b) => b.date - a.date)
+    const transactions = user.transactions.sort((a,b) => b.date - a.date)
+
+    res.json(transactions)
+    // res.json(user.transactions)
 }

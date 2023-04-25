@@ -11,22 +11,17 @@ exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
 
     transactionsRaw = transactionsRaw.sort((a,b) => Object.keys(a) - Object.keys(b))
 
-    console.log('this is transactionsRaw ', transactionsRaw)
-
     const transactions = []
     
     transactionsRaw.forEach((x, i) => {
         const date = Number(Object.keys(x)[0])
         const name = x[date]['coin']
-
-        console.log('this is x', x)
         
         if (transactions.length === 0 || !transactions.flat().includes(name)) {
             transactions.push([date, x[date]['amount'], x[date]['total'], name])
         } else {
             let newTransactions = transactions.filter(x => x[3] == name)            
             newTransactions = newTransactions[newTransactions.length - 1]
-            // console.log('this is new transaction', newTransactions)
             if (x[date].type == 'sell') {
                 transactions.push([date, newTransactions[1] - x[date]['amount'], newTransactions[2] - x[date]['total'], name])
             } else {
@@ -36,76 +31,31 @@ exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
     })
 
 
-    // have to change months and year so that its more inclusive...
-    // console.log('this',cache.bitcoin.coin.yearlyChart[0].data)
-    // console.log('this',cache.ethereum.coin.yearlyChart[0].data)
-    // console.log(first)
-
     const datesPriceCoin = {}
     uniqueCoinsUser.forEach(x => {
         datesPriceCoin[x] = {'years': cache[x].coin.yearlyRaw.reverse().filter((x, i) => i%16 === 0), 'months': cache[x].coin.yearlyRaw.reverse().slice(0,92).filter((x, i) => i%4 === 0).reverse()};
     })
-    
-    // fix netprofit so it uses the same dates for each
-
-
-    // const netProfit = {}
-
-    // uniqueCoinsUser.forEach(coin => {
-
-    //     datesPriceCoin[coin]['years'].forEach((yearDay) => {
-    //         if (!netProfit[coin]) { 
-    //             netProfit[coin] = {
-    //                 'years': []}
-    //         }
-    //         let lastTx = transactions.filter(tx => tx.includes(coin)).filter(tx => tx[0] <= yearDay[0]).slice(-1).flat()
-
-    //         let profit = lastTx.length ? Number((yearDay[1] * lastTx[1]).toFixed(2)) : 0
-    //         let date = String(new Date(yearDay[0])).split(' ').slice(1, 4).join(' ')
-            
-    //         netProfit[coin]['years'].push({'x': date, 'y': profit})
-    //     })
-
-    //     datesPriceCoin[coin]['months'].forEach((monthDay, i) => {
-    //         if (!netProfit[coin] || !netProfit[coin]['months']) { 
-    //             netProfit[coin]['months'] = []
-                
-    //         }
-
-    //         let lastTx = transactions.filter(tx => tx.includes(coin)).filter(tx => tx[0] <= monthDay[0]).slice(-1).flat()
-
-    //         let profit = lastTx.length ? Number((monthDay[1] * lastTx[1]).toFixed(2)) : 0
-    //         let date = String(new Date(monthDay[0])).split(' ').slice(1, 4).join(' ')
-            
-    //         // netProfit[coin]['months'].push({'x': `${i} ${date}`, 'y': profit})
-    //         netProfit[coin]['months'].push({'x': date, 'y': profit})
-    //     })
-    // })
-
-    // console.log('this is datepricecon', datesPriceCoin)
-    console.log('this is trans', transactions)
-    // console.log('this is netprofit', netProfit)
-
-    // console.log('this is cache', cache.bitcoin.coin.yearlyRaw.slice(0,50).forEach((x, i)=> {
-    //     console.log(cache.ethereum.coin.yearlyRaw[i][0] - x[0] <= 86400000)
-    // }))
-    // console.log('this is cache', cache.ethereum.coin.yearlyRaw)
-    // use transactions[1] which is total amount you have and calculate portfolio
-
 
     const netProfit = {'months': [], 'years': []}
+
+    console.log('transactions', transactions)
 
     uniqueCoinsUser.forEach((coinName, i) => {
         // console.log(coinName)
         if (i === 0) {
             datesPriceCoin[coinName]['months'].forEach(dayPrice => {
+                
                 let temp = transactions.filter(tx => tx[0] <= dayPrice[0] && tx.includes(coinName)).slice(-1)[0]
-                netProfit['months'].push({'x': dayPrice[0], 'y': dayPrice[1] *temp[1]})
+                temp = temp === undefined ? [0,0] : temp
+                netProfit['months'].push({'x': dayPrice[0], 'y': dayPrice[1] * temp[1]})
             })
 
             datesPriceCoin[coinName]['years'].forEach(dayPrice => {
+                // console.log('this is dayprice',dayPrice, coinName)
                 let temp = transactions.filter(tx => tx[0] <= dayPrice[0] && tx.includes(coinName)).slice(-1)[0]
-                netProfit['years'].push({'x': dayPrice[0], 'y': dayPrice[1] *temp[1]})
+                // console.log('this is temp', temp)
+                temp = temp === undefined ? [0,0] : temp
+                netProfit['years'].push({'x': dayPrice[0], 'y': dayPrice[1] * temp[1]})
             })
             
         } else {
@@ -136,47 +86,26 @@ exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
 
         }
     })
+    
 
     netProfit.months.forEach((entry, i) => {
-        netProfit.months[i].x = new Date(entry.x).toDateString().split(' ').slice(1,4).join(' ')
+        // netProfit.months[i].x = new Date(entry.x).toDateString().split(' ').slice(1,4).join(' ')
+        let temp = new Date(entry.x).toDateString().split(' ')
+        let year = "'" + String(temp.slice(3)).split('').slice(2).join('')
+        netProfit.months[i].x = temp.slice(1,3).join(' ') + ' ' + year
     })
 
-    netProfit.months.forEach((entry, i) => {
-        netProfit.years[i].x = new Date(entry.x).toDateString().split(' ').slice(1,4).join(' ')
+    netProfit.years.forEach((entry, i) => {
+        let temp = new Date(entry.x).toDateString().split(' ')
+        // netProfit.years[i].x = new Date(entry.x).toDateString().split(' ').slice(1,4).join(' ')
+        // console.log(temp.slice(3))
+        let year = "'" + String(temp.slice(3)).split('').slice(2).join('')
+        
+        netProfit.years[i].x = temp.slice(1,3).join(' ') + ' ' + year
+        // netProfit.years[i].x = new Date(entry.x).toDateString().split(' ').slice(1,4).join(' ')
     })
 
-    // netProfit
-
-    //netProfit has how much profit for each coin monthly and yearly
-
-    // const yearProfit = {}
-
-    // uniqueCoinsUser.forEach(coin => {
-    //     netProfit[coin]['years'].forEach(dayPrice => {
-    //         // console.log('this is payprice ', dayPrice)
-    //         if (!yearProfit[dayPrice.x]) { yearProfit[dayPrice.x] = dayPrice.y}
-    //         else { yearProfit[dayPrice.x] += dayPrice.y }
-    //     })
-    // })
-
-    // const monthProfit = {}
-
-    // uniqueCoinsUser.forEach(coin => {
-    //     netProfit[coin]['months'].forEach(dayPrice => {
-    //         // console.log('this', dayPrice)
-    //         if (!monthProfit[dayPrice.x]) { monthProfit[dayPrice.x] = dayPrice.y}
-    //         else { monthProfit[dayPrice.x] += dayPrice.y }
-    //     })
-    // })
-
-    // const yearlyData = Object.entries(yearProfit).map(data => {
-    //     return {x: data[0], y: Number(data[1].toFixed(2))}
-    // })
-
-    // const monthlyData = Object.entries(monthProfit).map(data => {
-    //     // console.log('this', data)
-    //     return {x: data[0], y: Number(data[1].toFixed(2))}
-    // })
+    console.log('this is netprofit', netProfit)
 
     const totals = {}
 
@@ -194,7 +123,7 @@ exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
 
     const profit = ((currentPrices.now - currentPrices.spent) / currentPrices.spent * 100).toFixed(1) + '%'
     const overview = {profit: Number((currentPrices.now - currentPrices.spent).toFixed(2)), profitPercent: profit, 'allocated': Number(currentPrices.spent.toFixed(2)), 'currentValue': Number(currentPrices.now.toFixed(2))}
-    console.log('this is overview', overview)
+    // console.log('this is overview', overview)
 
     const dailyProfitRaw = {}
     uniqueCoinsUser.forEach(coinName => {
@@ -225,7 +154,7 @@ exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
 
     const dailyData = cache[uniqueCoinsUser[0]].coin.dailyChart[0].data.map((day, i) => {
         // return {'x': day.x, 'y': Number(dailyProfit[i].toFixed(2))}
-        return {'x': day.x.split(':').slice(0,2).join(':') + ' GMT', 'y': Number(dailyProfit[i].toFixed(2))}
+        return {'x': day.x.split(':').slice(0,2).join(':'), 'y': Number(dailyProfit[i].toFixed(2))}
     })
     
     const yearlyLineData = [{
@@ -248,6 +177,8 @@ exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
         "data": dailyData
         // "data": fixNetProfit.monthly
     }]
+
+    console.log(yearlyLineData, monthlyLineData, dailyLineData)
 
     return {'yearly': yearlyLineData, 'monthly': monthlyLineData, 'daily': dailyLineData, overview}
 }

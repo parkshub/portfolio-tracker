@@ -13,9 +13,12 @@ import { Typography } from '@mui/material';
 
 const BrowseCoinCell = ({coin}) => {
 
-    const top3List = ['bitcoin', 'ethereum']
+    console.log('BrowseCoinCell got', coin)
+
+    const top2List = ['bitcoin', 'ethereum']
     const randomizer = Math.floor(Math.random() * (2) ) + 0;
-    const coinLink = top3List[randomizer]
+    const coinLink = top2List.includes(coin.id) ? coin.id : top2List[randomizer]
+    // const coinLink = top2List[randomizer]
     // this is done to limit the coin pages to just bitcoin and ethereum. 
     // gathering historical data from multiple coins resulted reaching the api call limit
     

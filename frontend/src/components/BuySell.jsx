@@ -74,7 +74,7 @@ export default function BuySell({transaction, yearlyData, coinInfo}) {
       const minDateString = new Date(minDate).toDateString().split(' ').slice(1,4).join(' ')
       
       if (UTCDate < minDate) {
-        toast.warn(`Manual input needed for dates ${minDateString} and before.`)
+        toast.warn(`Manual input needed dates ${minDateString} and before.`)
       }
       
       if (!manualInput) {
@@ -119,6 +119,7 @@ export default function BuySell({transaction, yearlyData, coinInfo}) {
     const data = { coinId: coinInfo.id, coinSymbol: coinInfo.symbol, coinImage: coinInfo.image.small, price: formData.price, amount: formData.amount, date, type: transaction , total}
     console.log('submit button was pressed and this is data ', data)
     dispatch(txCoin(data))
+    handleClose()
   }
 
   useEffect(() => {

@@ -18,7 +18,7 @@ const items = coins.map((coin) => {
   return (
   <Grid container justify="column">
     <Grid item xs={12} textAlign="center">
-      <img src={coin.image} height="150px"/>
+      <img src={coin.image} height="100px"/>
     </Grid>
     <Grid item xs={12} textAlign="center">
       <p>{coin.name}</p>

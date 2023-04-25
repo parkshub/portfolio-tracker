@@ -12,14 +12,21 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Container from '@mui/material/Container';
 
+import { useState } from 'react';
+
 import { loginUser } from '../features/user/userSlice';
 import { useDispatch } from 'react-redux';
+
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify'
 
 export default function BasicModal() {
 
   const dispatch = useDispatch()
 
-  const [open, setOpen] = React.useState(false);
+  const { isFulfilled } = useSelector((state) => state.auth)
+
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -37,12 +44,11 @@ export default function BasicModal() {
 
   return (
     <div>
-      {/* <Button onClick={handleOpen}> */}
-        {/* <Typography sx={{color:"white"}}> */}
-        <Typography onClick={handleOpen}>
+      <Button variant='contained' sx={{m: 1, width: 100}} onClick={handleOpen}>
+        <Typography>
             Login
         </Typography>
-        {/* </Button> */}
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}

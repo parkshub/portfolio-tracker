@@ -47,7 +47,7 @@ const TxCell = ({coin}) => {
             </TableCell>
 
             <TableCell>
-                <Typography>
+                <Typography color={coin.type ==='sell' ? 'secondary' : 'primary'}>
                     {coin.type}
                 </Typography>
             </TableCell>

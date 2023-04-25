@@ -35,6 +35,8 @@ export default function Browse() {
 
     const [filteredCoinState, setFilteredCoinState] = useState(coins) // this does not get called on second render
 
+    // console.log('this is filteredcoinsstate', filteredCoinState)
+
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
 
@@ -94,7 +96,7 @@ export default function Browse() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        { filteredCoinState.length > 0 &&
+                        { filteredCoinState.length > 0 && filteredCoinState[0].userId === undefined &&
                             filteredCoinState.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(coin => {
                                 return(
                                     <BrowseCoinCell key={coin.id} coin={coin}/>

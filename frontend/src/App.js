@@ -15,6 +15,8 @@ import "react-toastify/dist/ReactToastify.css"
 
 import Profile from './pages/Profile';
 
+import Footer from './components/Footer';
+
 
 // consider getting store values here instead of from individual page
 // and use a timer to update every min or so
@@ -34,6 +36,7 @@ function App() {
           <Route path='/loginTest' element={<LoginTestErase/>}/>
           <Route path='/profile' element={<Profile/>}/>
         </Routes>
+        <Footer/>
       </Router>
       <ToastContainer />
     </>

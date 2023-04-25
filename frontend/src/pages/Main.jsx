@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from "react-redux"
-import { lineData, pieData } from '../utils/data'
+// import { lineData, pieData } from '../utils/data'
+import { pieData } from '../utils/data'
 import { useEffect, useState } from 'react';
 import { getTopCoins, reset } from '../features/coin/coinSlice';
 
@@ -15,13 +16,17 @@ import Carousel from '../components/Carousel';
 
 import Login from '../components/Login'
 import SignUp from '../components/SignUp'
+import { isRejected } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
+import lineData from '../utils/lineData';
 
 const Main = () => {
     const dispatch = useDispatch()
-
-    const { user } = useSelector((state) => state.auth)
+    
+    const { user, isFulfilled, isRejected, message } = useSelector((state) => state.auth)
     const { coins, isPending } = useSelector((state) => state.coin)
     const [value, setValue] = useState('daily');
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -43,6 +48,18 @@ const Main = () => {
         )
     }
 
+    if (isRejected) {
+        toast.warn(message, {
+            toastId: "your-id"
+          });
+    }
+
+    if (isFulfilled) {
+        toast('Sign in successful, welcome.', {
+            toastId: "your-id"
+          });
+    }
+
   return (
     <>
     <Container maxWidth="xl">
@@ -60,14 +77,14 @@ const Main = () => {
                 </Typography>
 
                 { !user &&
-                    <Grid item>
-                        <Button variant='contained' sx={{m: 1, width: 100}}>
-                            <SignUp></SignUp>
-                        </Button>
+                    <Grid item container justifyContent='center'>
+                        {/* <Button variant='contained' sx={{m: 1, width: 100}}> */}
+                            <SignUp/>
+                        {/* </Button> */}
                         
-                        <Button variant='contained' sx={{m: 1, width: 100}}>
-                            <Login></Login>
-                        </Button>
+                        {/* <Button variant='contained' sx={{m: 1, width: 100}}> */}
+                            <Login/>
+                        {/* </Button> */}
                     </Grid>
                 }
             </Grid>
@@ -80,7 +97,9 @@ const Main = () => {
                 <Grid item container xs={12} sm={6} height={400} direction="row">
                     
                     <Grid item container height={350} xs={12}>
-                        <ExampleLine data={lineData} />
+                        { lineData && 
+                            <ExampleLine data={lineData[value]} />
+                        }
                     </Grid>
 
                     <Grid item xs={12}>

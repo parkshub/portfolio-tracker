@@ -30,13 +30,19 @@ import TableRow from '@mui/material/TableRow';
 import { getTx } from '../features/coin/coinSlice';
 
 import TxCell from '../components/TxCell'
+import { isRejected } from '@reduxjs/toolkit'
+import { toast } from 'react-toastify'
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Collapse from '@mui/material/Collapse';
+
 
 const Coins = () => {
 
     const dispatch = useDispatch()
     const { id } = useParams()
 
-    const { coin, coins, isPending } = useSelector((state) => state.coin)
+    const { coin, coins, isPending, isRejected, message } = useSelector((state) => state.coin)
     
     // const filteredCoins = coins.filter((x) => x.coinId == id)
     // console.log(filteredCoins)
@@ -83,6 +89,12 @@ const Coins = () => {
     useEffect(() => {
         setChartData(coin[value + 'Chart'])
     },[coin, value])
+
+    if (isRejected) {
+        toast.warn(message, {
+            toastId: "your-id"
+          });
+    }
 
     return (
         <Container maxWidth="xl">
