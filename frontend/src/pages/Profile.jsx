@@ -54,7 +54,7 @@ const Profile = () => {
 
     const pieData = generatePieData(coins)
 
-    console.log('filteredstate is', filteredCoinState)
+    // console.log('filteredstate is', filteredCoinState)
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -74,9 +74,22 @@ const Profile = () => {
         setPage(0);
     }
 
+    ///////////////////////////////////////////
+    // the issue right now is that linedatafunc is sometimes receiving object coins thats from the previous state that should've been upgraded and sometimes receiving []
+    // it works for now, but there are a lot of errors in console
+    // to recreate problem change
+    // const uniqueCoinsUser = Object.keys(coins[0]).includes('userId') ? [...new Set(coins.map(coin => coin.coinId))] : []
+    // to 
+    // const uniqueCoinsUser = [...new Set(coins.map(coin => coin.coinId))]
+    // you might need to just create a different object in redux for this
+    ///////////////////////////////////////////
+
     const lineDataFunc = async() => {
-        const uniqueCoinsUser = [...new Set(coins.map(coin => coin.coinId))]
+        console.log('linedatafunc is using coins', coins)
+        const uniqueCoinsUser = Object.keys(coins[0]).includes('userId') ? [...new Set(coins.map(coin => coin.coinId))] : []
         const cache = {}
+
+        console.log('these are unique coins user', uniqueCoinsUser)
 
         Object.entries(localStorage).forEach((x) => {
             if (uniqueCoinsUser.includes(x[0])) { 
@@ -89,14 +102,17 @@ const Profile = () => {
 
         uniqueCoinsUser.forEach((x) => {
 
+            console.log('this is unique entry', x)
+
             if(!Object.keys(cache).includes(x) || today - cache[x]['time'] > 86400000) {
                 missing.push(x)
             }
         })
-        // console.log('these are missing', missing)
+        console.log('these are all missing', missing)
 
         if (missing.length > 0) {
             for (let i of missing) {
+                console.log('there are missing one is ', i)
                 await dispatch(getCoin(i))
                 // console.log('these are missing', i)
                 // console.log(localStorage.getItem(i))
@@ -120,8 +136,11 @@ const Profile = () => {
     useEffect(() => {
         // console.log('useeffect ran and coins values is ', coins.length)
         setFilteredCoinState(coins)
+
+        // if (coins[0].userId !== undefined) {
         
-        lineDataFunc()
+            lineDataFunc()
+        // }
 
     }, [coins]) 
 

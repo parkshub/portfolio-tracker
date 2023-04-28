@@ -4,6 +4,8 @@
 ///////////////////////////////////////////
 exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
 
+    console.log('generateLineData received coins', coins)
+
     if (coins.length == 0) { return '' }
 
     let transactionsRaw = []
@@ -38,7 +40,7 @@ exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
 
     const netProfit = {'months': [], 'years': []}
 
-    console.log('transactions', transactions)
+    // console.log('transactions', transactions)
 
     uniqueCoinsUser.forEach((coinName, i) => {
         // console.log(coinName)
@@ -105,7 +107,7 @@ exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
         // netProfit.years[i].x = new Date(entry.x).toDateString().split(' ').slice(1,4).join(' ')
     })
 
-    console.log('this is netprofit', netProfit)
+    // console.log('this is netprofit', netProfit)
 
     const totals = {}
 
@@ -178,7 +180,7 @@ exports.generateLineData = (cache, uniqueCoinsUser, coins) => {
         // "data": fixNetProfit.monthly
     }]
 
-    console.log(yearlyLineData, monthlyLineData, dailyLineData)
+    // console.log(yearlyLineData, monthlyLineData, dailyLineData)
 
     return {'yearly': yearlyLineData, 'monthly': monthlyLineData, 'daily': dailyLineData, overview}
 }
